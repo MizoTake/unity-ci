@@ -36,6 +36,7 @@ orbs:
                 if [ << parameters.zip >> ]; then
                   apt update && apt-get install -y zip
                   zip archive -r ./Build/
+                  mv ./archive.zip ./Build/
                 fi
               working_directory: .
       test:
