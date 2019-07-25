@@ -20,24 +20,11 @@ orbs:
           method:
             description: "Build Execute Method"
             type: string
-          zip:
-            description: "Build Execute Method"
-            default: false
-            type: boolean
         steps:
           - run:
               name: build run
               command: |
                 /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -executeMethod << parameters.method >> -buildTarget << parameters.platform >>
-              working_directory: .
-          - run:
-              name: zip archive
-              command: |
-                if [ << parameters.zip >> ]; then
-                  apt update && apt-get install -y zip
-                  zip archive -r ./Build/
-                  mv ./archive.zip ./Build/
-                fi
               working_directory: .
       test:
         description: "Unity Test"
@@ -50,6 +37,16 @@ orbs:
               name: test run
               command: |
                 /opt/Unity/Editor/Unity -quit -nographics -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./<< parameters.mode >>-results.xml
+              working_directory: .
+      zip:
+        description: "Build Content Archive"
+        steps:
+          - run:
+              name: zip archive
+              command: |
+                apt update && apt-get install -y zip
+                zip archive -r ./Build/
+                mv ./archive.zip ./Build/
               working_directory: .
     jobs:
       build:
@@ -73,9 +70,12 @@ orbs:
           - build:
               platform: << parameters.platform >>
               method: << parameters.method >>
-              zip: << parameters.zip >>
           - store_artifacts:
               path: ./Build/
+          - when:
+              condition: << parameters.zip >>
+              steps:
+                - zip
       test:
         parameters:
           exec:
