@@ -31,7 +31,7 @@ orbs:
                 /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -executeMethod << parameters.method >> -buildTarget << parameters.platform >>
                 if [ << parameters.zip >> ]; then
                   apt update && apt-get install -y zip
-                  zip archive -r .
+                  zip archive -r ./Build/<< parameters.platform >>
                 fi
               working_directory: .
       test:
@@ -57,6 +57,10 @@ orbs:
           platform:
             description: "Test Target Platform"
             type: string
+          zip:
+            description: "Build Execute Method"
+            default: false
+            type: boolean
         executor: << parameters.exec >>
         steps:
           - checkout
@@ -64,6 +68,7 @@ orbs:
           - build:
               platform: << parameters.platform >>
               method: << parameters.method >>
+              zip: << parameters.zip >>
           - store_artifacts:
               path: ./Build/<< parameters.platform >>
       test:
@@ -92,7 +97,17 @@ workflows:
       - unity-ci/build:
           name: Build Execute Test
           exec: unity_executor
-          platform: Android
+          platform: Win
+          method: Build.Execute
+      - unity-ci/build:
+          name: Build Execute Test
+          exec: unity_executor
+          platform: WebGL
+          method: Build.Execute
+      - unity-ci/build:
+          name: Build Execute Test
+          exec: unity_executor
+          platform: OSXUniversal
           method: Build.Execute
       - unity-ci/test:
           name: Edit Mode Test
