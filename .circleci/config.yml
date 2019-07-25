@@ -70,12 +70,12 @@ orbs:
           - build:
               platform: << parameters.platform >>
               method: << parameters.method >>
-          - store_artifacts:
-              path: ./Build/
           - when:
               condition: << parameters.zip >>
               steps:
                 - zip
+          - store_artifacts:
+              path: ./Build/
       test:
         parameters:
           exec:
