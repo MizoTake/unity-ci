@@ -1,0 +1,104 @@
+version: 2.1
+orbs:
+  unity-ci:
+    commands:
+      unity_activate:
+        description: "Unity License Activate"
+        steps:
+          - run:
+              name: activate
+              command: |
+                apt update && apt install libunwind8 -y
+                echo ${UNITY_LICENSE_BASE64} | base64 -di | tr -d '\r' > .circleci/Unity.ulf
+                /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .circleci/Unity.ulf || exit 0
+      build:
+        description: "Unity Build"
+        parameters:
+          platform:
+            description: "Build Target Platform"
+            type: string
+          method:
+            description: "Build Execute Method"
+            type: string
+          zip:
+            description: "Build Execute Method"
+            default: false
+            type: boolean
+        steps:
+          - run:
+              name: build run
+              command: |
+                /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -executeMethod << parameters.method >> -buildTarget << parameters.platform >>
+                if [ << parameters.zip >> ]; then
+                  apt-get install -y zip
+                  zip archive -r .
+                fi
+              working_directory: .
+      test:
+        description: "Unity Test"
+        parameters:
+          mode:
+            description: "Test Target Platform"
+            type: string
+        steps:
+          - run:
+              name: test run
+              command: |
+                /opt/Unity/Editor/Unity -quit -nographics -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./<< parameters.mode >>-results.xml
+              working_directory: .
+    jobs:
+      build:
+        parameters:
+          exec:
+            type: executor
+          method:
+            description: "Build Execute Method"
+            type: string
+          platform:
+            description: "Test Target Platform"
+            type: string
+        executor: << parameters.exec >>
+        steps:
+          - checkout
+          - unity_activate
+          - build:
+              platform: << parameters.platform >>
+              method: << parameters.method >>
+      test:
+        parameters:
+          exec:
+            type: executor
+          mode:
+            description: "Test Target Mode"
+            type: string
+        executor: << parameters.exec >>
+        steps:
+          - checkout
+          - unity_activate
+          - test:
+              mode: << parameters.mode >>
+          - store_artifacts:
+              path: ./<< parameters.mode >>-results.xml
+executors:
+  unity_executor:
+    docker:
+      - image: gableroux/unity3d:2019.1.3f1
+    environment:
+      BUILD_NAME: SampleBuild
+workflows:
+  version: 2
+  test:
+    jobs:
+      - unity-ci/build:
+          name: Build Execute Test
+          exec: unity_executor
+          platform: standalone
+          method: Build.Execute
+      - unity-ci/test:
+          name: Edit Mode Test
+          exec: unity_executor
+          mode: editmode
+      - unity-ci/test:
+          name: Play Mode Test
+          exec: unity_executor
+          mode: playmode
