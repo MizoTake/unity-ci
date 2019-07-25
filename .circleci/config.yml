@@ -95,17 +95,17 @@ workflows:
   test:
     jobs:
       - unity-ci/build:
-          name: Build Execute Test
+          name: Build Execute Win
           exec: unity_executor
           platform: Win
           method: Build.Execute
       - unity-ci/build:
-          name: Build Execute Test
+          name: Build Execute WebGL
           exec: unity_executor
           platform: WebGL
           method: Build.Execute
       - unity-ci/build:
-          name: Build Execute Test
+          name: Build Execute OSXUniversal
           exec: unity_executor
           platform: OSXUniversal
           method: Build.Execute
