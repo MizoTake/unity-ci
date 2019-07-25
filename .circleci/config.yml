@@ -30,7 +30,7 @@ orbs:
               command: |
                 /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -executeMethod << parameters.method >> -buildTarget << parameters.platform >>
                 if [ << parameters.zip >> ]; then
-                  apt-get install -y zip
+                  apt update && apt-get install -y zip
                   zip archive -r .
                 fi
               working_directory: .
@@ -64,6 +64,8 @@ orbs:
           - build:
               platform: << parameters.platform >>
               method: << parameters.method >>
+          - store_artifacts:
+              path: ./Build/<< parameters.platform >>
       test:
         parameters:
           exec:
@@ -82,9 +84,7 @@ orbs:
 executors:
   unity_executor:
     docker:
-      - image: gableroux/unity3d:2019.1.3f1
-    environment:
-      BUILD_NAME: SampleBuild
+      - image: gableroux/unity3d:2019.1.0f2
 workflows:
   version: 2
   test:
@@ -92,7 +92,7 @@ workflows:
       - unity-ci/build:
           name: Build Execute Test
           exec: unity_executor
-          platform: standalone
+          platform: Android
           method: Build.Execute
       - unity-ci/test:
           name: Edit Mode Test
