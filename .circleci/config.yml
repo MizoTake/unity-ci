@@ -29,6 +29,10 @@ orbs:
               name: build run
               command: |
                 /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -executeMethod << parameters.method >> -buildTarget << parameters.platform >>
+              working_directory: .
+          - run:
+              name: zip archive
+              command: |
                 if [ << parameters.zip >> ]; then
                   apt update && apt-get install -y zip
                   zip archive -r ./Build/<< parameters.platform >>
@@ -70,7 +74,7 @@ orbs:
               method: << parameters.method >>
               zip: << parameters.zip >>
           - store_artifacts:
-              path: ./Build/<< parameters.platform >>
+              path: ./Build/
       test:
         parameters:
           exec:
