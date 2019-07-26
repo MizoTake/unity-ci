@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  orb-tools: circleci/orb-tools@2.0.0
+  orb-tools: circleci/orb-tools@8.27.4
   unity-ci: mizotake/unity-ci@dev:feature/orb
 executors:
   unity_executor:
