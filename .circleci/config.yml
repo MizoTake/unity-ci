@@ -36,6 +36,7 @@ orbs:
           - run:
               name: test run
               command: |
+                mkdir ./test-results
                 /opt/Unity/Editor/Unity -quit -nographics -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./test-results/<< parameters.mode >>-results.xml
               working_directory: .
       zip:
