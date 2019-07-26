@@ -36,7 +36,7 @@ orbs:
           - run:
               name: test run
               command: |
-                /opt/Unity/Editor/Unity -quit -nographics -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./<< parameters.mode >>-results.xml
+                /opt/Unity/Editor/Unity -quit -nographics -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./test-results/<< parameters.mode >>-results.xml
               working_directory: .
       zip:
         description: "Build Content Archive"
@@ -60,7 +60,7 @@ orbs:
             description: "Test Target Platform"
             type: string
           zip:
-            description: "Build Execute Method"
+            description: "Archive Build Contents"
             default: false
             type: boolean
         executor: << parameters.exec >>
@@ -89,8 +89,8 @@ orbs:
           - unity_activate
           - test:
               mode: << parameters.mode >>
-          - store_artifacts:
-              path: ./<< parameters.mode >>-results.xml
+          - store_test_results:
+              path: ./test-results
 executors:
   unity_executor:
     docker:
