@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  cli: circleci/circleci-cli@volatile
-
 executors:
   unity_executor:
     docker:
