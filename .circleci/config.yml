@@ -37,7 +37,7 @@ orbs:
               name: test run
               command: |
                 mkdir ./test-results
-                /opt/Unity/Editor/Unity -quit -nographics -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./test-results/<< parameters.mode >>-results.xml
+                /opt/Unity/Editor/Unity -quit -nographics -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -editorTestsResultFile ./test-results/
               working_directory: .
       zip:
         description: "Build Content Archive"
