@@ -8,7 +8,7 @@ executors:
       - image: gableroux/unity3d:2019.1.0f2
 workflows:
   version: 2
-  unity-ci:
+  unity-ci-build:
     jobs:
       - unity-ci/build:
           name: Build Execute Win
@@ -28,6 +28,8 @@ workflows:
           platform: OSXUniversal
           method: Build.Execute
           zip: true
+  unity-ci-test:
+    jobs:
       - unity-ci/test:
           name: Edit Mode Test
           exec: unity_executor
@@ -38,19 +40,36 @@ workflows:
           mode: playmode
   deploy:
     jobs:
+      - orb-tools/test-in-builds:
+          orb-location: .circleci/orb.yml
+          orb-name: unity-ci
+          test-steps:
+            - orb-tools/local-test-build:
+                test-config-location: test/shallow-clone-checkout.yml
       - orb-tools/publish:
           orb-path: .circleci/orb.yml
           orb-ref: mizotake/unity-ci@dev:${CIRCLE_BRANCH}
           publish-token-variable: $CIRCLECI_API_TOKEN
           validate: true
+          requires: [orb-tools/test-in-builds]
           filters:
             branches:
               ignore: master
+      - orb-tools/increment:
+          orb-path: .circleci/orb.yml
+          orb-ref: mizotake/unity-ci
+          segment: patch
+          publish-token-variable: $CIRCLECI_API_TOKEN
+          checkout: false
+          requires: [orb-tools/test-in-builds]
+          filters:
+            branches:
+              only: master
       - orb-tools/publish:
           orb-path: .circleci/orb.yml
           orb-ref: mizotake/unity-ci
           publish-token-variable: $CIRCLECI_API_TOKEN
-          validate: true
+          requires: [orb-tools/increment]
           filters:
             branches:
               only: master
