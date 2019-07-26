@@ -99,7 +99,7 @@ executors:
       - image: gableroux/unity3d:2019.1.0f2
 workflows:
   version: 2
-  test:
+  unity-ci:
     jobs:
       - unity-ci/build:
           name: Build Execute Win
@@ -127,10 +127,9 @@ workflows:
           name: Play Mode Test
           exec: unity_executor
           mode: playmode
+  deploy:
+    jobs:
       - orb-tools/publish:
-          branches:
-            ignore:
-              - master
           orb-path: .circleci/orb.yml
           orb-ref: mizotake/unity-ci@dev:${CIRCLE_BRANCH}
           publish-token-variable: $CIRCLECI_API_TOKEN
