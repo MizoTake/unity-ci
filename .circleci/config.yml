@@ -1,5 +1,6 @@
 version: 2.1
 orbs:
+  orb-tools: circleci/orb-tools@2.0.0
   unity-ci:
     commands:
       unity_activate:
@@ -126,3 +127,11 @@ workflows:
           name: Play Mode Test
           exec: unity_executor
           mode: playmode
+      - orb-tools/publish:
+          branches:
+            ignore:
+              - master
+          orb-path: .circleci/orb.yml
+          orb-ref: mizotake/unity-ci@dev:${CIRCLE_BRANCH}
+          publish-token-variable: $CIRCLECI_API_TOKEN
+          validate: true
