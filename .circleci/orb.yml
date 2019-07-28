@@ -16,7 +16,7 @@ commands:
           name: activate
           command: |
             apt update && apt install libunwind8 jq -y
-            /opt/Unity/Editor/Unity -quit -batchmode -nographics -logFile -createManualActivationFile || exit 0
+            /opt/Unity/Editor/Unity -quit -batchmode -nographics -logFile -createManualActivationFile
             cat Unity_v<< parameters.version >>.alf
             curl -i -X POST -H "Content-Type:application/xml" -d @Unity_v<< parameters.version >>.alf 'https://license.unity3d.com/genesis/activation/create-transaction'
             curl -i -X PUT -H "Content-Type:application/json" -d '{"transaction":{"serial":{"type":"personal"}}}' 'https://license.unity3d.com/genesis/activation/update-transaction'
