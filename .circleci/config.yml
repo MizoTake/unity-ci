@@ -11,41 +11,6 @@ executors:
 
 workflows:
   version: 2
-  unity-ci-build:
-    jobs:
-      - unity-ci/build:
-          name: Build Execute Win
-          exec: unity_executor
-          license: UNITY_LICENSE_BASE64
-          platform: Win
-          method: Build.Execute
-          zip: true
-      - unity-ci/build:
-          name: Build Execute WebGL
-          exec: unity_executor
-          license: UNITY_LICENSE_BASE64
-          platform: WebGL
-          method: Build.Execute
-          zip: true
-      - unity-ci/build:
-          name: Build Execute OSXUniversal
-          exec: unity_executor
-          license: UNITY_LICENSE_BASE64
-          platform: OSXUniversal
-          method: Build.Execute
-          zip: true
-  unity-ci-test:
-    jobs:
-      - unity-ci/test:
-          name: Edit Mode Test
-          exec: unity_executor
-          license: UNITY_LICENSE_BASE64
-          mode: editmode
-      - unity-ci/test:
-          name: Play Mode Test
-          exec: unity_executor
-          license: UNITY_LICENSE_BASE64
-          mode: playmode
   deploy:
     jobs:
       - orb-tools/test-in-builds:
@@ -78,3 +43,43 @@ workflows:
           filters:
             branches:
               only: master
+  unity-ci-build:
+    jobs:
+      - unity-ci/build:
+          requires: [orb-tools/publish]
+          name: Build Execute Win
+          exec: unity_executor
+          license: UNITY_LICENSE_BASE64
+          platform: Win
+          method: Build.Execute
+          zip: true
+      - unity-ci/build:
+          requires: [orb-tools/publish]
+          name: Build Execute WebGL
+          exec: unity_executor
+          license: UNITY_LICENSE_BASE64
+          platform: WebGL
+          method: Build.Execute
+          zip: true
+      - unity-ci/build:
+          requires: [orb-tools/publish]
+          name: Build Execute OSXUniversal
+          exec: unity_executor
+          license: UNITY_LICENSE_BASE64
+          platform: OSXUniversal
+          method: Build.Execute
+          zip: true
+  unity-ci-test:
+    jobs:
+      - unity-ci/test:
+          requires: [orb-tools/publish]
+          name: Edit Mode Test
+          exec: unity_executor
+          license: UNITY_LICENSE_BASE64
+          mode: editmode
+      - unity-ci/test:
+          requires: [orb-tools/publish]
+          name: Play Mode Test
+          exec: unity_executor
+          license: UNITY_LICENSE_BASE64
+          mode: playmode
