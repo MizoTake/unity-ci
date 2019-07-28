@@ -15,7 +15,7 @@ commands:
       - run:
           name: activate
           command: |
-            apt update && apt install libunwind8 jq -y
+            apt update && apt install libunwind8 jq curl -y
             /opt/Unity/Editor/Unity -quit -batchmode -nographics -logFile -createManualActivationFile || exit 0
             
       - run:
