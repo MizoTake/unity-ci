@@ -19,7 +19,7 @@ commands:
             /opt/Unity/Editor/Unity -quit -batchmode -nographics -logFile -createManualActivationFile
             
       - run:
-          name: activate
+          name: activate continue
           command: |
             cat Unity_v<< parameters.version >>.alf
             curl -i -X POST -H "Content-Type:application/xml" -d @Unity_v<< parameters.version >>.alf 'https://license.unity3d.com/genesis/activation/create-transaction'
