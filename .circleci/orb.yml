@@ -61,6 +61,7 @@ jobs:
       license:
         description: "Unity License"
         type: env_var_name
+        default: UNITY_LICENSE_BASE64
       method:
         description: "Build Execute Method"
         type: string
@@ -92,6 +93,7 @@ jobs:
       license:
         description: "Unity License"
         type: env_var_name
+        default: UNITY_LICENSE_BASE64
       mode:
         description: "Test Target Mode"
         type: string
