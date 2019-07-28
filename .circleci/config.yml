@@ -43,8 +43,6 @@ workflows:
           filters:
             branches:
               only: master
-  unity-ci-build:
-    jobs:
       - unity-ci/build:
           requires: [orb-tools/publish]
           name: Build Execute Win
@@ -69,8 +67,6 @@ workflows:
           platform: OSXUniversal
           method: Build.Execute
           zip: true
-  unity-ci-test:
-    jobs:
       - unity-ci/test:
           requires: [orb-tools/publish]
           name: Edit Mode Test
