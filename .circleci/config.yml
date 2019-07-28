@@ -11,6 +11,41 @@ executors:
 
 workflows:
   version: 2
+  unity-ci-build:
+    jobs:
+      - unity-ci/build:
+          name: Build Execute Win
+          exec: unity_executor
+          license: UNITY_LICENSE_BASE64
+          platform: Win
+          method: Build.Execute
+          zip: true
+      - unity-ci/build:
+          name: Build Execute WebGL
+          exec: unity_executor
+          license: UNITY_LICENSE_BASE64
+          platform: WebGL
+          method: Build.Execute
+          zip: true
+      - unity-ci/build:
+          name: Build Execute OSXUniversal
+          exec: unity_executor
+          license: UNITY_LICENSE_BASE64
+          platform: OSXUniversal
+          method: Build.Execute
+          zip: true
+  unity-ci-test:
+    jobs:
+      - unity-ci/test:
+          name: Edit Mode Test
+          exec: unity_executor
+          license: UNITY_LICENSE_BASE64
+          mode: editmode
+      - unity-ci/test:
+          name: Play Mode Test
+          exec: unity_executor
+          license: UNITY_LICENSE_BASE64
+          mode: playmode
   deploy:
     jobs:
       - orb-tools/test-in-builds:
@@ -20,7 +55,6 @@ workflows:
             - orb-tools/local-test-build:
                 test-config-location: .circleci/test/unity-ci-test.yml
       - orb-tools/publish:
-          name: "dev publish"
           orb-path: .circleci/orb.yml
           orb-ref: mizotake/unity-ci@dev:${CIRCLE_BRANCH}
           validate: true
@@ -38,46 +72,9 @@ workflows:
             branches:
               only: master
       - orb-tools/publish:
-          name: "master publish"
           orb-path: .circleci/orb.yml
           orb-ref: mizotake/unity-ci
-          requires: ["dev publish"]
+          requires: [orb-tools/increment]
           filters:
             branches:
               only: master
-      - unity-ci/build:
-          requires: ["dev publish"]
-          name: Build Execute Win
-          exec: unity_executor
-          license: UNITY_LICENSE_BASE64
-          platform: Win
-          method: Build.Execute
-          zip: true
-      - unity-ci/build:
-          requires: ["dev publish"]
-          name: Build Execute WebGL
-          exec: unity_executor
-          license: UNITY_LICENSE_BASE64
-          platform: WebGL
-          method: Build.Execute
-          zip: true
-      - unity-ci/build:
-          requires: ["dev publish"]
-          name: Build Execute OSXUniversal
-          exec: unity_executor
-          license: UNITY_LICENSE_BASE64
-          platform: OSXUniversal
-          method: Build.Execute
-          zip: true
-      - unity-ci/test:
-          requires: ["dev publish"]
-          name: Edit Mode Test
-          exec: unity_executor
-          license: UNITY_LICENSE_BASE64
-          mode: editmode
-      - unity-ci/test:
-          requires: ["dev publish"]
-          name: Play Mode Test
-          exec: unity_executor
-          license: UNITY_LICENSE_BASE64
-          mode: playmode
