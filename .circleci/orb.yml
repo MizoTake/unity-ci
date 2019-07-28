@@ -8,12 +8,20 @@ commands:
       license:
         description: "Unity License"
         type: env_var_name
+      version:
+        description: "Unity Version"
+        type: string
     steps:
       - run:
           name: activate
           command: |
-            apt update && apt install libunwind8 -y
-            echo ${<< parameters.license >>} | base64 -di | tr -d '\r' > .circleci/Unity.ulf
+            apt update && apt install libunwind8 jq -y
+            /opt/Unity/Editor/Unity -quit -batchmode -nographics -logFile -createManualActivationFile || exit 0
+            echo Unity_v<< parameters.version >>.alf
+            curl -X POST -H "Content-Type:application/xml" -d @Unity_v<< parameters.version >>.alf 'https://license.unity3d.com/genesis/activation/create-transaction'
+            curl -X PUT -H "Content-Type:application/json" -d '{"transaction":{"serial":{"type":"personal"}}}' 'https://license.unity3d.com/genesis/activation/update-transaction'
+            curl -X POST -H "Content-Type:application/json" 'https://license.unity3d.com/genesis/activation/download-license' | jq '.xml' > .circleci/Unity.ulf
+            # echo ${<< parameters.license >>} | base64 -di | tr -d '\r' > .circleci/Unity.ulf
             /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .circleci/Unity.ulf || exit 0
   build:
     description: "Unity Build"
@@ -62,6 +70,9 @@ jobs:
         description: "Unity License"
         type: env_var_name
         default: UNITY_LICENSE_BASE64
+      version:
+        description: "Unity Version"
+        type: string
       method:
         description: "Build Execute Method"
         type: string
@@ -77,6 +88,7 @@ jobs:
       - checkout
       - unity_activate:
           license: << parameters.license >>
+          version: << parameters.version >>
       - build:
           platform: << parameters.platform >>
           method: << parameters.method >>
@@ -94,6 +106,9 @@ jobs:
         description: "Unity License"
         type: env_var_name
         default: UNITY_LICENSE_BASE64
+      version:
+        description: "Unity Version"
+        type: string
       mode:
         description: "Test Target Mode"
         type: string
@@ -102,6 +117,7 @@ jobs:
       - checkout
       - unity_activate:
           license: << parameters.license >>
+          version: << parameters.version >>
       - test:
           mode: << parameters.mode >>
       - store_test_results:
