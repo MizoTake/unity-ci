@@ -24,12 +24,16 @@ commands:
       method:
         description: "Build Execute Method"
         type: string
+      no_output_timout:
+        description: "No Output Timeout"
+        type: string
     steps:
       - run:
           name: build run
           command: |
             /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -executeMethod << parameters.method >> -buildTarget << parameters.platform >>
           working_directory: .
+          no_output_timout: << parameters.no_output_timout >>
   test:
     description: "Unity Test"
     parameters:
@@ -72,6 +76,10 @@ jobs:
         description: "Archive Build Contents"
         default: false
         type: boolean
+      no_output_timout:
+        description: "No Output Timeout"
+        type: string
+        default: 10m
     executor: << parameters.exec >>
     steps:
       - checkout
@@ -80,6 +88,7 @@ jobs:
       - build:
           platform: << parameters.platform >>
           method: << parameters.method >>
+          no_output_timout: << parameters.no_output_timout >>
       - when:
           condition: << parameters.zip >>
           steps:
