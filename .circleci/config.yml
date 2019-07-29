@@ -16,21 +16,18 @@ workflows:
       - unity-ci/build:
           name: Build Execute Win
           exec: unity_executor
-          version: "2019.1.0f2"
           platform: Win
           method: Build.Execute
           zip: true
       - unity-ci/build:
           name: Build Execute WebGL
           exec: unity_executor
-          version: "2019.1.0f2"
           platform: WebGL
           method: Build.Execute
           zip: true
       - unity-ci/build:
           name: Build Execute OSXUniversal
           exec: unity_executor
-          version: "2019.1.0f2"
           platform: OSXUniversal
           method: Build.Execute
           zip: true
@@ -39,26 +36,24 @@ workflows:
       - unity-ci/test:
           name: Edit Mode Test
           exec: unity_executor
-          version: "2019.1.0f2"
           mode: editmode
       - unity-ci/test:
           name: Play Mode Test
           exec: unity_executor
-          version: "2019.1.0f2"
           mode: playmode
   deploy:
     jobs:
-      - orb-tools/test-in-builds:
-          orb-location: .circleci/orb.yml
-          orb-name: unity-ci
-          test-steps:
-            - orb-tools/local-test-build:
-                test-config-location: .circleci/test/unity-ci-test.yml
+      # - orb-tools/test-in-builds:
+      #     orb-location: .circleci/orb.yml
+      #     orb-name: unity-ci
+      #     test-steps:
+      #       - orb-tools/local-test-build:
+      #           test-config-location: .circleci/test/unity-ci-test.yml
       - orb-tools/publish:
           orb-path: .circleci/orb.yml
           orb-ref: mizotake/unity-ci@dev:${CIRCLE_BRANCH}
           validate: true
-          requires: [orb-tools/test-in-builds]
+          # requires: [orb-tools/test-in-builds]
           filters:
             branches:
               ignore: master
