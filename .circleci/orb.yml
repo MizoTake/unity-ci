@@ -1,0 +1,117 @@
+version: 2.1
+description: "Unity CI Orb"
+
+commands:
+  unity_activate:
+    description: "Unity License Activate"
+    parameters:
+      license:
+        description: "Unity License"
+        type: env_var_name
+    steps:
+      - run:
+          name: activate
+          command: |
+            apt update && apt install libunwind8 -y
+            echo ${<< parameters.license >>} | base64 -di | tr -d '\r' > .circleci/Unity.ulf
+            /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .circleci/Unity.ulf || exit 0
+  build:
+    description: "Unity Build"
+    parameters:
+      platform:
+        description: "Build Target Platform"
+        type: string
+      method:
+        description: "Build Execute Method"
+        type: string
+      no_output_timeout:
+        description: "No Output Timeout"
+        type: string
+    steps:
+      - run:
+          name: build run
+          command: |
+            /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -executeMethod << parameters.method >> -buildTarget << parameters.platform >>
+          working_directory: .
+          no_output_timeout: << parameters.no_output_timeout >>
+  test:
+    description: "Unity Test"
+    parameters:
+      mode:
+        description: "Test Target Platform"
+        type: string
+    steps:
+      - run:
+          name: test run
+          command: |
+            mkdir ./test-results
+            /opt/Unity/Editor/Unity -quit -nographics -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./test-results/results.xml
+          working_directory: .
+  zip:
+    description: "Build Content Archive"
+    steps:
+      - run:
+          name: zip archive
+          command: |
+            apt update && apt-get install -y zip
+            zip archive -r ./Build/
+            mv ./archive.zip ./Build/
+          working_directory: .
+jobs:
+  build:
+    parameters:
+      exec:
+        type: executor
+      license:
+        description: "Unity License"
+        type: env_var_name
+        default: UNITY_LICENSE_BASE64
+      method:
+        description: "Build Execute Method"
+        type: string
+      platform:
+        description: "Test Target Platform"
+        type: string
+      zip:
+        description: "Archive Build Contents"
+        default: false
+        type: boolean
+      no_output_timeout:
+        description: "No Output Timeout"
+        type: string
+        default: 10m
+    executor: << parameters.exec >>
+    steps:
+      - checkout
+      - unity_activate:
+          license: << parameters.license >>
+      - build:
+          platform: << parameters.platform >>
+          method: << parameters.method >>
+          no_output_timeout: << parameters.no_output_timeout >>
+      - when:
+          condition: << parameters.zip >>
+          steps:
+            - zip
+      - store_artifacts:
+          path: ./Build/
+  test:
+    parameters:
+      exec:
+        type: executor
+      license:
+        description: "Unity License"
+        type: env_var_name
+        default: UNITY_LICENSE_BASE64
+      mode:
+        description: "Test Target Mode"
+        type: string
+    executor: << parameters.exec >>
+    steps:
+      - checkout
+      - unity_activate:
+          license: << parameters.license >>
+      - test:
+          mode: << parameters.mode >>
+      - store_test_results:
+          path: ./test-results

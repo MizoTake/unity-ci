@@ -1,104 +1,17 @@
 version: 2.1
+
 orbs:
-  unity-ci:
-    commands:
-      unity_activate:
-        description: "Unity License Activate"
-        steps:
-          - run:
-              name: activate
-              command: |
-                apt update && apt install libunwind8 -y
-                echo ${UNITY_LICENSE_BASE64} | base64 -di | tr -d '\r' > .circleci/Unity.ulf
-                /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .circleci/Unity.ulf || exit 0
-      build:
-        description: "Unity Build"
-        parameters:
-          platform:
-            description: "Build Target Platform"
-            type: string
-          method:
-            description: "Build Execute Method"
-            type: string
-        steps:
-          - run:
-              name: build run
-              command: |
-                /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -executeMethod << parameters.method >> -buildTarget << parameters.platform >>
-              working_directory: .
-      test:
-        description: "Unity Test"
-        parameters:
-          mode:
-            description: "Test Target Platform"
-            type: string
-        steps:
-          - run:
-              name: test run
-              command: |
-                mkdir ./test-results
-                /opt/Unity/Editor/Unity -quit -nographics -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./test-results/results.xml
-              working_directory: .
-      zip:
-        description: "Build Content Archive"
-        steps:
-          - run:
-              name: zip archive
-              command: |
-                apt update && apt-get install -y zip
-                zip archive -r ./Build/
-                mv ./archive.zip ./Build/
-              working_directory: .
-    jobs:
-      build:
-        parameters:
-          exec:
-            type: executor
-          method:
-            description: "Build Execute Method"
-            type: string
-          platform:
-            description: "Test Target Platform"
-            type: string
-          zip:
-            description: "Archive Build Contents"
-            default: false
-            type: boolean
-        executor: << parameters.exec >>
-        steps:
-          - checkout
-          - unity_activate
-          - build:
-              platform: << parameters.platform >>
-              method: << parameters.method >>
-          - when:
-              condition: << parameters.zip >>
-              steps:
-                - zip
-          - store_artifacts:
-              path: ./Build/
-      test:
-        parameters:
-          exec:
-            type: executor
-          mode:
-            description: "Test Target Mode"
-            type: string
-        executor: << parameters.exec >>
-        steps:
-          - checkout
-          - unity_activate
-          - test:
-              mode: << parameters.mode >>
-          - store_test_results:
-              path: ./test-results
+  orb-tools: circleci/orb-tools@8.27.4
+  unity-ci: mizotake/unity-ci@dev:feature/orb
+
 executors:
   unity_executor:
     docker:
       - image: gableroux/unity3d:2019.1.0f2
+
 workflows:
   version: 2
-  test:
+  unity-ci-build:
     jobs:
       - unity-ci/build:
           name: Build Execute Win
@@ -118,6 +31,8 @@ workflows:
           platform: OSXUniversal
           method: Build.Execute
           zip: true
+  unity-ci-test:
+    jobs:
       - unity-ci/test:
           name: Edit Mode Test
           exec: unity_executor
@@ -126,3 +41,35 @@ workflows:
           name: Play Mode Test
           exec: unity_executor
           mode: playmode
+  deploy:
+    jobs:
+      # - orb-tools/test-in-builds:
+      #     orb-location: .circleci/orb.yml
+      #     orb-name: unity-ci
+      #     test-steps:
+      #       - orb-tools/local-test-build:
+      #           test-config-location: .circleci/test/unity-ci-test.yml
+      - orb-tools/publish:
+          orb-path: .circleci/orb.yml
+          orb-ref: mizotake/unity-ci@dev:${CIRCLE_BRANCH}
+          validate: true
+          # requires: [orb-tools/test-in-builds]
+          filters:
+            branches:
+              ignore: master
+      - orb-tools/increment:
+          orb-path: .circleci/orb.yml
+          orb-ref: mizotake/unity-ci
+          segment: patch
+          checkout: false
+          # requires: [orb-tools/test-in-builds]
+          filters:
+            branches:
+              only: master
+      - orb-tools/publish:
+          orb-path: .circleci/orb.yml
+          orb-ref: mizotake/unity-ci
+          requires: [orb-tools/increment]
+          filters:
+            branches:
+              only: master
