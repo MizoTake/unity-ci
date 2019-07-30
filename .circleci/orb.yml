@@ -59,6 +59,7 @@ commands:
           working_directory: .
 jobs:
   build:
+    machine: true
     parameters:
       exec:
         type: executor
@@ -96,6 +97,7 @@ jobs:
       - store_artifacts:
           path: ./Build/
   test:
+    machine: true
     parameters:
       exec:
         type: executor
