@@ -47,15 +47,31 @@ commands:
             mkdir ./test-results
             /opt/Unity/Editor/Unity -quit -nographics -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./test-results/results.xml
           working_directory: .
+  execute_method:
+    description: "Unity Build"
+    parameters:
+      method:
+        description: "Build Execute Method"
+        type: string
+    steps:
+      - run:
+          name: execute method
+          command: |
+            /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -executeMethod << parameters.method >> -buildTarget standalone
+          working_directory: .
   zip:
     description: "Build Content Archive"
+    parameters:
+      directory:
+        description: "Target Directory"
+        type: string
     steps:
       - run:
           name: zip archive
           command: |
             apt update && apt-get install -y zip
-            zip archive -r ./Build/
-            mv ./archive.zip ./Build/
+            zip archive -r << parameters.directory >>
+            mv ./archive.zip << parameters.directory >>
           working_directory: .
 jobs:
   build:
@@ -80,6 +96,10 @@ jobs:
         description: "No Output Timeout"
         type: string
         default: 10m
+      directory:
+        description: "Target Directory"
+        type: string
+        default: .
     executor: << parameters.exec >>
     steps:
       - checkout
@@ -92,7 +112,8 @@ jobs:
       - when:
           condition: << parameters.zip >>
           steps:
-            - zip
+            - zip:
+              directory: << parameters.directory >>
       - store_artifacts:
           path: ./Build/
   test:
@@ -115,3 +136,21 @@ jobs:
           mode: << parameters.mode >>
       - store_test_results:
           path: ./test-results
+  execute_method:
+    parameters:
+      exec:
+        type: executor
+      license:
+        description: "Unity License"
+        type: env_var_name
+        default: UNITY_LICENSE_BASE64
+      method:
+        description: "Build Execute Method"
+        type: string
+    executor: << parameters.exec >>
+    steps:
+      - checkout
+      - unity_activate:
+          license: << parameters.license >>
+      - execute_method:
+          method: << parameters.method >>

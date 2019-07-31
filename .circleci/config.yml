@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   orb-tools: circleci/orb-tools@8.27.4
-  unity-ci: mizotake/unity-ci@dev:feature/orb
+  unity-ci: mizotake/unity-ci@dev:0.0.1
 
 executors:
   unity_executor:
@@ -19,18 +19,21 @@ workflows:
           platform: Win
           method: Build.Execute
           zip: true
+          directory: ./Build/
       - unity-ci/build:
           name: Build Execute WebGL
           exec: unity_executor
           platform: WebGL
           method: Build.Execute
           zip: true
+          directory: ./Build/
       - unity-ci/build:
           name: Build Execute OSXUniversal
           exec: unity_executor
           platform: OSXUniversal
           method: Build.Execute
           zip: true
+          directory: ./Build/
   unity-ci-test:
     jobs:
       - unity-ci/test:
@@ -51,25 +54,25 @@ workflows:
       #           test-config-location: .circleci/test/unity-ci-test.yml
       - orb-tools/publish:
           orb-path: .circleci/orb.yml
-          orb-ref: mizotake/unity-ci@dev:${CIRCLE_BRANCH}
+          orb-ref: mizotake/unity-ci@dev:0.0.1
           validate: true
           # requires: [orb-tools/test-in-builds]
-          filters:
-            branches:
-              ignore: master
-      - orb-tools/increment:
-          orb-path: .circleci/orb.yml
-          orb-ref: mizotake/unity-ci
-          segment: patch
-          checkout: false
-          # requires: [orb-tools/test-in-builds]
-          filters:
-            branches:
-              only: master
-      - orb-tools/publish:
-          orb-path: .circleci/orb.yml
-          orb-ref: mizotake/unity-ci
-          requires: [orb-tools/increment]
-          filters:
-            branches:
-              only: master
+      #     filters:
+      #       branches:
+      #         ignore: master
+      # - orb-tools/increment:
+      #     orb-path: .circleci/orb.yml
+      #     orb-ref: mizotake/unity-ci
+      #     segment: patch
+      #     checkout: false
+      #     # requires: [orb-tools/test-in-builds]
+      #     filters:
+      #       branches:
+      #         only: master
+      # - orb-tools/publish:
+      #     orb-path: .circleci/orb.yml
+      #     orb-ref: mizotake/unity-ci
+      #     requires: [orb-tools/increment]
+      #     filters:
+      #       branches:
+      #         only: master
