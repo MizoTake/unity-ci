@@ -48,10 +48,10 @@ commands:
             /opt/Unity/Editor/Unity -quit -nographics -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./test-results/results.xml
           working_directory: .
   execute_method:
-    description: "Unity Build"
+    description: "Build Execute Method"
     parameters:
       method:
-        description: "Build Execute Method"
+        description: "Target Method"
         type: string
     steps:
       - run:
@@ -73,6 +73,7 @@ commands:
             zip archive -r << parameters.directory >>
             mv ./archive.zip << parameters.directory >>
           working_directory: .
+
 jobs:
   build:
     parameters:
@@ -113,9 +114,9 @@ jobs:
           condition: << parameters.zip >>
           steps:
             - zip:
-              directory: << parameters.directory >>
+                directory: << parameters.directory >>
       - store_artifacts:
-          path: ./Build/
+          path: << parameters.directory >>
   test:
     parameters:
       exec:
