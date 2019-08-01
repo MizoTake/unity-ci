@@ -20,7 +20,8 @@ workflows:
           artifact-path: packed/orb.yml
           validate: true
       - orb-tools/test-in-builds:
-          requires: [orb-tools/pack]
+          requires: 
+            - orb-tools/pack
           attach-workspace: true
           orb-location: src/orb.yml
           orb-name: unity-ci
@@ -28,10 +29,11 @@ workflows:
             - orb-tools/local-test-build:
                 test-config-location: src/test/unity-ci-test.yml
       - orb-tools/publish:
+          requires:
+            - orb-tools/test-in-builds
           orb-path: src/orb.yml
           orb-ref: mizotake/unity-ci@dev:0.0.1
           validate: true
-          # requires: [orb-tools/test-in-builds]
       #     filters:
       #       branches:
       #         ignore: master

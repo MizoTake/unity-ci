@@ -17,10 +17,11 @@ executors:
       - image: gableroux/unity3d:2019.1.0f2
 
 jobs:
+  setup:
+    - stepup
   unity-ci-build-win:
     executor: unity_executor
     steps:
-      - setup
       - unity-ci/build:
           name: Build Execute Win
           platform: Win
@@ -29,7 +30,6 @@ jobs:
   unity-ci-build-webgl:
     executor: unity_executor
     steps:
-      - setup
       - unity-ci/build:
           name: Build Execute WebGL
           platform: WebGL
@@ -38,7 +38,6 @@ jobs:
   unity-ci-build-osxuniversal:
     executor: unity_executor
     steps:
-      - setup
       - unity-ci/build:
           name: Build Execute OSXUniversal
           platform: OSXUniversal
@@ -47,14 +46,60 @@ jobs:
   unity-ci-test-edit-mode:
     executor: unity_executor
     steps:
-      - setup
       - unity-ci/test:
           name: Edit Mode Test
           mode: editmode
   unity-ci-test-play-mode:
     executor: unity_executor
     steps:
-      - setup
       - unity-ci/test:
           name: Play Mode Test
+          mode: playmode
+
+workflows:
+  version: 2
+  unity-ci-build:
+    jobs:
+      - setup
+      - unity-ci/build:
+          requires:
+            - setup
+          name: Build Execute Win
+          exec: unity_executor
+          platform: Win
+          method: Build.Execute
+          zip: true
+          directory: ./Build/
+      - unity-ci/build:
+          requires:
+            - setup
+          name: Build Execute WebGL
+          exec: unity_executor
+          platform: WebGL
+          method: Build.Execute
+          zip: true
+          directory: ./Build/
+      - unity-ci/build:
+          requires:
+            - setup
+          name: Build Execute OSXUniversal
+          exec: unity_executor
+          platform: OSXUniversal
+          method: Build.Execute
+          zip: true
+          directory: ./Build/
+  unity-ci-test:
+    jobs:
+      - setup
+      - unity-ci/test:
+          requires:
+            - setup
+          name: Edit Mode Test
+          exec: unity_executor
+          mode: editmode
+      - unity-ci/test:
+          requires:
+            - setup
+          name: Play Mode Test
+          exec: unity_executor
           mode: playmode
