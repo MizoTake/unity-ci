@@ -11,39 +11,6 @@ executors:
 
 workflows:
   version: 2
-  unity-ci-build:
-    jobs:
-      - unity-ci/build:
-          name: Build Execute Win
-          exec: unity_executor
-          platform: Win
-          method: Build.Execute
-          zip: true
-          directory: ./Build/
-      - unity-ci/build:
-          name: Build Execute WebGL
-          exec: unity_executor
-          platform: WebGL
-          method: Build.Execute
-          zip: true
-          directory: ./Build/
-      - unity-ci/build:
-          name: Build Execute OSXUniversal
-          exec: unity_executor
-          platform: OSXUniversal
-          method: Build.Execute
-          zip: true
-          directory: ./Build/
-  unity-ci-test:
-    jobs:
-      - unity-ci/test:
-          name: Edit Mode Test
-          exec: unity_executor
-          mode: editmode
-      - unity-ci/test:
-          name: Play Mode Test
-          exec: unity_executor
-          mode: playmode
   deploy:
     jobs:
       - orb-tools/pack:

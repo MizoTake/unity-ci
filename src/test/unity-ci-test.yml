@@ -19,7 +19,7 @@ executors:
 jobs:
   unity-ci-build-win:
     executor: unity_executor
-    jobs:
+    steps:
       - setup
       - unity-ci/build:
           name: Build Execute Win
@@ -29,7 +29,7 @@ jobs:
           zip: true
   unity-ci-build-webgl:
     executor: unity_executor
-    jobs:
+    steps:
       - setup
       - unity-ci/build:
           name: Build Execute WebGL
@@ -39,7 +39,7 @@ jobs:
           zip: true
   unity-ci-build-osxuniversal:
     executor: unity_executor
-    jobs:
+    steps:
       - setup
       - unity-ci/build:
           name: Build Execute OSXUniversal
@@ -49,7 +49,7 @@ jobs:
           zip: true
   unity-ci-test-edit-mode:
     executor: unity_executor
-    jobs:
+    steps:
       - setup
       - unity-ci/test:
           name: Edit Mode Test
@@ -57,7 +57,7 @@ jobs:
           mode: editmode
   unity-ci-test-play-mode:
     executor: unity_executor
-    jobs:
+    steps:
       - setup
       - unity-ci/test:
           name: Play Mode Test
