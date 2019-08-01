@@ -23,7 +23,6 @@ jobs:
       - setup
       - unity-ci/build:
           name: Build Execute Win
-          exec: << parameters.executor >>
           platform: Win
           method: Build.Execute
           zip: true
@@ -33,7 +32,6 @@ jobs:
       - setup
       - unity-ci/build:
           name: Build Execute WebGL
-          exec: << parameters.executor >>
           platform: WebGL
           method: Build.Execute
           zip: true
@@ -43,7 +41,6 @@ jobs:
       - setup
       - unity-ci/build:
           name: Build Execute OSXUniversal
-          exec: << parameters.executor >>
           platform: OSXUniversal
           method: Build.Execute
           zip: true
@@ -53,7 +50,6 @@ jobs:
       - setup
       - unity-ci/test:
           name: Edit Mode Test
-          exec: << parameters.executor >>
           mode: editmode
   unity-ci-test-play-mode:
     executor: unity_executor
@@ -61,5 +57,4 @@ jobs:
       - setup
       - unity-ci/test:
           name: Play Mode Test
-          exec: << parameters.executor >>
           mode: playmode
