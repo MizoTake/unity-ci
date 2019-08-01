@@ -18,7 +18,8 @@ executors:
 
 jobs:
   setup:
-    - stepup
+    steps:
+      - setup
   unity-ci-build-win:
     executor: unity_executor
     steps:
