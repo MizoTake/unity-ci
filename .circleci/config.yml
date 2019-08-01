@@ -46,14 +46,22 @@ workflows:
           mode: playmode
   deploy:
     jobs:
-      # - orb-tools/test-in-builds:
-      #     orb-location: .circleci/orb.yml
-      #     orb-name: unity-ci
-      #     test-steps:
-      #       - orb-tools/local-test-build:
-      #           test-config-location: .circleci/test/unity-ci-test.yml
+      - orb-tools/pack:
+          source-dir: src/
+          destination-orb-path: packed/orb.yml
+          workspace-path: packed/orb.yml
+          artifact-path: packed/orb.yml
+          validate: true
+      - orb-tools/test-in-builds:
+          requires: [orb-tools/pack]
+          attach-workspace: true
+          orb-location: src/orb.yml
+          orb-name: unity-ci
+          test-steps:
+            - orb-tools/local-test-build:
+                test-config-location: src/test/unity-ci-test.yml
       - orb-tools/publish:
-          orb-path: .circleci/orb.yml
+          orb-path: src/orb.yml
           orb-ref: mizotake/unity-ci@dev:0.0.1
           validate: true
           # requires: [orb-tools/test-in-builds]
@@ -61,7 +69,7 @@ workflows:
       #       branches:
       #         ignore: master
       # - orb-tools/increment:
-      #     orb-path: .circleci/orb.yml
+      #     orb-path: src/orb.yml
       #     orb-ref: mizotake/unity-ci
       #     segment: patch
       #     checkout: false
@@ -70,7 +78,7 @@ workflows:
       #       branches:
       #         only: master
       # - orb-tools/publish:
-      #     orb-path: .circleci/orb.yml
+      #     orb-path: src/orb.yml
       #     orb-ref: mizotake/unity-ci
       #     requires: [orb-tools/increment]
       #     filters:
