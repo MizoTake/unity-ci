@@ -22,10 +22,6 @@ jobs:
   build:
     executor: unity_executor
     steps:
-      - run:
-          command: |
-            apt update && apt install git -y
-      - checkout
       - unity-ci/unity_activate
       - setup
       - unity-ci/build:
