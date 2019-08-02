@@ -21,17 +21,18 @@ jobs:
     executor: unity_executor
     steps:
       - run:
-            command: |
-              apt update && apt install git -y
-              echo ${<< parameters.license >>}
+          command: |
+            apt update && apt install git -y
+            echo ${<< parameters.license >>}
       - checkout
-      - unity-ci/unity_activate
+      - unity-ci/unity_activate:
+          license: UNITY_LICENSE_BASE64
       - setup
       - unity-ci/build:
-            platform: Win
-            method: Build.Execute
+          platform: Win
+          method: Build.Execute
       - unity-ci/zip:
-            directory: ./Build/
+          directory: ./Build/
       - store_artifacts:
           path: ./Build/
   unity-ci-build-webgl:
