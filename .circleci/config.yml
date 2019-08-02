@@ -26,6 +26,8 @@ workflows:
           orb-location: src/orb.yml
           orb-name: unity-ci
           test-steps:
+            - run:
+              commnad: export UNITY_LICENSE_BASE64=${UNITY_LICENSE_BASE64}
             - orb-tools/local-test-build:
                 test-config-location: src/test/unity-ci-test.yml
       - orb-tools/publish:
