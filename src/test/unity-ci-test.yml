@@ -18,7 +18,6 @@ executors:
 
 jobs:
   unity-ci-build-win:
-    name: Build Execute Win
     executor: unity_executor
     steps:
       - checkout
@@ -31,7 +30,6 @@ jobs:
       - store_artifacts:
           path: ./Build/
   unity-ci-build-webgl:
-    name: Build Execute WebGL
     executor: unity_executor
     steps:
       - checkout
@@ -44,7 +42,6 @@ jobs:
       - store_artifacts:
           path: ./Build/
   unity-ci-build-osxuniversal:
-    name: Build Execute OSXUniversal
     executor: unity_executor
     steps:
       - checkout
@@ -57,7 +54,6 @@ jobs:
       - store_artifacts:
           path: ./Build/
   unity-ci-test-editmode:
-    name: Edit Mode Test
     executor: unity_executor
     steps:
       - checkout
@@ -65,7 +61,6 @@ jobs:
       - unity-ci/test:
           mode: editmode
   unity-ci-test-playmode:
-    name: Play Mode Test
     executor: unity_executor
     steps:
       - checkout
