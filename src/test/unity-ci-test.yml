@@ -23,10 +23,8 @@ jobs:
       - run:
           command: |
             apt update && apt install git -y
-            echo ${<< parameters.license >>}
       - checkout
-      - unity-ci/unity_activate:
-          license: UNITY_LICENSE_BASE64
+      - unity-ci/unity_activate
       - setup
       - unity-ci/build:
           platform: Win
