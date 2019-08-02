@@ -24,10 +24,12 @@ jobs:
       - setup
       - unity-ci/build:
             name: Build Execute Win
-            exec: unity_executor
             platform: Win
             method: Build.Execute
-            zip: true
+      - zip:
+            directory: ./Build/
+      - store_artifacts:
+          path: ./Build/
   unity-ci-build-webgl:
     executor: unity_executor
     steps:
@@ -35,10 +37,12 @@ jobs:
       - setup
       - unity-ci/build:
           name: Build Execute WebGL
-          exec: unity_executor
           platform: WebGL
           method: Build.Execute
-          zip: true
+      - zip:
+            directory: ./Build/
+      - store_artifacts:
+          path: ./Build/
   unity-ci-build-osxuniversal:
     executor: unity_executor
     steps:
@@ -46,10 +50,12 @@ jobs:
       - setup
       - unity-ci/build:
           name: Build Execute OSXUniversal
-          exec: unity_executor
           platform: OSXUniversal
           method: Build.Execute
-          zip: true
+      - zip:
+            directory: ./Build/
+      - store_artifacts:
+          path: ./Build/
   unity-ci-test-editmode:
     executor: unity_executor
     steps:
@@ -57,7 +63,6 @@ jobs:
       - setup
       - unity-ci/test:
           name: Edit Mode Test
-          exec: unity_executor
           mode: editmode
   unity-ci-test-playmode:
     executor: unity_executor
@@ -66,7 +71,6 @@ jobs:
       - setup
       - unity-ci/test:
           name: Play Mode Test
-          exec: unity_executor
           mode: playmode
 
 workflows:

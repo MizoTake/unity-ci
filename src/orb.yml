@@ -27,6 +27,7 @@ commands:
       no_output_timeout:
         description: "No Output Timeout"
         type: string
+        default: 10m
     steps:
       - run:
           name: build run
