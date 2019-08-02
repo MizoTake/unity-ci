@@ -21,10 +21,10 @@ jobs:
     executor: unity_executor
     steps:
       - run:
-            command: apt update && apt install git -y
+            command: |
+              apt update && apt install git -y
+              echo ${<< parameters.license >>}
       - checkout
-      - run:
-            command: echo ${<< parameters.license >>}
       - unity-ci/unity_activate
       - setup
       - unity-ci/build:
