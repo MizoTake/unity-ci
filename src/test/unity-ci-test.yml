@@ -25,8 +25,7 @@ jobs:
       - checkout
       - run:
             command: echo ${<< parameters.license >>}
-      - unity-ci/unity_activate:
-            license: UNITY_LICENSE_BASE64
+      - unity-ci/unity_activate
       - setup
       - unity-ci/build:
             platform: Win
