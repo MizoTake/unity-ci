@@ -20,7 +20,8 @@ jobs:
   build:
     executor: unity_executor
     steps:
-      - unity-ci/unity_activate
+      - unity-ci/unity_activate:
+            license: UNITY_LICENSE_BASE64
       - setup
       - unity-ci/build:
             platform: Win
