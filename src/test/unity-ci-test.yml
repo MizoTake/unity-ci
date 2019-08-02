@@ -25,7 +25,7 @@ jobs:
       - unity-ci/build:
             platform: Win
             method: Build.Execute
-      - zip:
+      - unity-ci/zip:
             directory: ./Build/
       - store_artifacts:
           path: ./Build/
@@ -37,7 +37,7 @@ jobs:
       - unity-ci/build:
           platform: WebGL
           method: Build.Execute
-      - zip:
+      - unity-ci/zip:
             directory: ./Build/
       - store_artifacts:
           path: ./Build/
@@ -49,7 +49,7 @@ jobs:
       - unity-ci/build:
           platform: OSXUniversal
           method: Build.Execute
-      - zip:
+      - unity-ci/zip:
             directory: ./Build/
       - store_artifacts:
           path: ./Build/
