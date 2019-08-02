@@ -8,6 +8,7 @@ commands:
       license:
         description: "Unity License"
         type: env_var_name
+        default: UNITY_LICENSE_BASE64
     steps:
       - run:
           name: activate
