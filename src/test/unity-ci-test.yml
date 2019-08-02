@@ -20,6 +20,9 @@ jobs:
   build:
     executor: unity_executor
     steps:
+      - run:
+            command: apt update && apt install git -y
+      - checkout
       - unity-ci/unity_activate:
             license: UNITY_LICENSE_BASE64
       - setup
