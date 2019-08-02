@@ -20,6 +20,7 @@ jobs:
   build:
     executor: unity_executor
     steps:
+      - unity-ci/unity_activate
       - setup
       - unity-ci/build:
             platform: Win
