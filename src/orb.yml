@@ -13,7 +13,7 @@ commands:
       - run:
           name: activate
           command: |
-            apt update && apt install libunwind8 -y
+            apt update && apt install base64 -y
             echo ${<< parameters.license >>} | base64 -di | tr -d '\r' > Unity.ulf
             /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile Unity.ulf || exit 0
   build:

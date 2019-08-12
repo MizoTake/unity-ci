@@ -9,6 +9,15 @@ executors:
     docker:
       - image: gableroux/unity3d:2019.1.0f2
 
+jobs:
+  orb-test:
+    parameters:
+      exec:
+        type: executor
+    executor: << parameters.exec >>
+    steps:
+      - checkout
+
 workflows:
   version: 2
   deploy:

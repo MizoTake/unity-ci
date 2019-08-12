@@ -14,7 +14,7 @@ commands:
 executors:
   unity_executor:
     docker:
-      - image: gableroux/unity3d:2019.1.0f2          
+      - image: gableroux/unity3d:2019.1.0f2
 
 jobs:
   build:
