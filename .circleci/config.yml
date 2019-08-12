@@ -9,15 +9,6 @@ executors:
     docker:
       - image: gableroux/unity3d:2019.1.0f2
 
-jobs:
-  orb-test:
-    parameters:
-      exec:
-        type: executor
-    executor: << parameters.exec >>
-    steps:
-      - checkout
-
 workflows:
   version: 2
   deploy:
@@ -35,8 +26,6 @@ workflows:
           orb-location: src/orb.yml
           orb-name: unity-ci
           test-steps:
-            - run:
-                commnad: export UNITY_LICENSE_BASE64=${UNITY_LICENSE_BASE64}
             - orb-tools/local-test-build:
                 test-config-location: src/test/unity-ci-test.yml
       - orb-tools/publish:
