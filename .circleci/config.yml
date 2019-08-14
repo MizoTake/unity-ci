@@ -24,11 +24,17 @@ commands:
             apt update && apt install cl-base64 -y
             echo ${<< parameters.license >>} | base64 -di | tr -d '\r' > Unity.ulf
 
+jobs:
+  activate:
+    executor: unity_executor
+    steps:
+      - unity_activate:
+
 workflows:
   version: 2
   deploy:
     jobs:
-      - unity_activate
+      - activate
       - orb-tools/pack:
           requires: 
             - unity_activate
