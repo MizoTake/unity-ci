@@ -30,6 +30,10 @@ jobs:
     steps:
       - checkout
       - unity_activate
+      - persist_to_workspace:
+          root: .
+          paths:
+            - Unity.ulf
 
 workflows:
   version: 2
@@ -42,7 +46,7 @@ workflows:
           attach-workspace: true
           source-dir: src/
           destination-orb-path: packed/orb.yml
-          workspace-path: packed/orb.yml
+          workspace-path: .
           artifact-path: packed/orb.yml
           validate: true
       - orb-tools/test-in-builds:
