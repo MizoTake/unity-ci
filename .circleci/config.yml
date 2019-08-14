@@ -28,7 +28,8 @@ jobs:
   activate:
     executor: unity_executor
     steps:
-      - unity_activate:
+      - checkout
+      - unity_activate
 
 workflows:
   version: 2
@@ -37,7 +38,7 @@ workflows:
       - activate
       - orb-tools/pack:
           requires: 
-            - unity_activate
+            - activate
           attach-workspace: true
           source-dir: src/
           destination-orb-path: packed/orb.yml
