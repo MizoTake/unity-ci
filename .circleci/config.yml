@@ -9,11 +9,30 @@ executors:
     docker:
       - image: gableroux/unity3d:2019.1.0f2
 
+commands:
+  unity_activate:
+    description: "Write Text File"
+    parameters:
+      license:
+        description: "Unity License"
+        type: env_var_name
+        default: UNITY_LICENSE_BASE64
+    steps:
+      - run:
+          name: activate
+          command: |
+            apt update && apt install cl-base64 -y
+            echo ${<< parameters.license >>} | base64 -di | tr -d '\r' > Unity.ulf
+
 workflows:
   version: 2
   deploy:
     jobs:
+      - unity_activate
       - orb-tools/pack:
+          requires: 
+            - unity_activate
+          attach-workspace: true
           source-dir: src/
           destination-orb-path: packed/orb.yml
           workspace-path: packed/orb.yml
