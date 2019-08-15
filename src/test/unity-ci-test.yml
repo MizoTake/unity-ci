@@ -20,7 +20,7 @@ executors:
           UNITY_LICENSE_BASE64: ${UNITY_LICENSE_BASE64}
 
 jobs:
-  build:
+  unity-ci-build-windows:
     executor: unity_executor
     steps:
       - unity-ci/unity_activate
