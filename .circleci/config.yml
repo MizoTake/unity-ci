@@ -9,33 +9,17 @@ executors:
       - image: gableroux/unity3d:2019.1.0f2
 
 commands:
-  unity_activate:
-    description: "Write Text File"
-    parameters:
-      license:
-        description: "Unity License"
-        type: env_var_name
-        default: UNITY_LICENSE_BASE64
+  setup:
+    description: "Unity Test Setup"
     steps:
       - run:
-          name: activate
+          name: craete project
           command: |
-            apt update && apt install cl-base64 -y
-            echo ${<< parameters.license >>} | base64 -di | tr -d '\r' > Unity.ulf
+            /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -createProject .
+            cp -pR ./ci-test/* ./Assets/
+          working_directory: .
 
-jobs:
-  unity-ci-build-windows:
-    executor: unity_executor
-    steps:
-      - unity-ci/unity_activate
-      - setup
-      - unity-ci/build:
-          platform: Win
-          method: Build.Execute
-      - unity-ci/zip:
-          directory: ./Build/
-      - store_artifacts:
-          path: ./Build/
+jobs:      
   test-for-orb:
     executor: unity_executor
     steps:
@@ -45,7 +29,15 @@ jobs:
           command: |
             curl -fLSs https://circle.ci/cli | bash
             circleci config pack src
-      - unity-ci-build-windows
+      - unity-ci/unity_activate
+      - setup
+      - unity-ci/build:
+          platform: Win
+          method: Build.Execute
+      - unity-ci/zip:
+          directory: ./Build/
+      - store_artifacts:
+          path: ./Build/
 
 workflows:
   version: 2
