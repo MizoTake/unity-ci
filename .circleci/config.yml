@@ -19,7 +19,7 @@ jobs:
             apt update && apt install curl -y
             curl -fLSs https://circle.ci/cli | bash
             echo "next pack"
-            circleci config pack src > uncompiled-test-config.yml
+            circleci config pack > uncompiled-test-config.yml
             echo "next process"
             cat uncompiled-config.yml
             circleci config process uncompiled-test-config.yml > test-config.yml
