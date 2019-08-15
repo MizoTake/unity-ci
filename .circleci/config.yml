@@ -18,16 +18,21 @@ jobs:
           command: |
             apt update && apt install curl -y
             curl -fLSs https://circle.ci/cli | bash
-            circleci config pack src > test-config.yml
-                        circleci config pack src > uncompiled-test-config.yml
+            echo "next pack"
+            circleci config pack src > uncompiled-test-config.yml
+            echo "next process"
             circleci config process uncompiled-test-config.yml > test-config.yml
+            echo "next execute"
             circleci local execute -c test-config.yml -e UNITY_LICENSE_BASE64=UNITY_LICENSE_BASE64 --job "unity-ci-build-webgl"
 
 workflows:
   version: 2
   deploy:
     jobs:
-      - test-for-orb
+      - orb-tools/lint
+      - test-for-orb:
+          requires:
+            - orb-tools/lint
       - orb-tools/publish:
           requires:
             - test-for-orb
