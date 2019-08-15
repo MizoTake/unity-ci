@@ -16,6 +16,7 @@ jobs:
       - run:
           name: curl cirlceci local
           command: |
+            apt update && apt install curl -y
             curl -fLSs https://circle.ci/cli | bash
             circleci config pack src > test-config.yml
             circleci build -e UNITY_LICENSE_BASE64=UNITY_LICENSE_BASE64 --job unity-ci-build-windows
