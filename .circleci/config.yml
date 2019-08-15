@@ -8,17 +8,6 @@ executors:
     docker:
       - image: gableroux/unity3d:2019.1.0f2
 
-commands:
-  setup:
-    description: "Unity Test Setup"
-    steps:
-      - run:
-          name: craete project
-          command: |
-            /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -createProject .
-            cp -pR ./ci-test/* ./Assets/
-          working_directory: .
-
 jobs:      
   test-for-orb:
     executor: unity_executor
@@ -28,31 +17,14 @@ jobs:
           name: curl cirlceci local
           command: |
             curl -fLSs https://circle.ci/cli | bash
-            circleci config pack src
-      - unity-ci/unity_activate
-      - setup
-      - unity-ci/build:
-          platform: Win
-          method: Build.Execute
-      - unity-ci/zip:
-          directory: ./Build/
-      - store_artifacts:
-          path: ./Build/
+            circleci config pack src > test-config.yml
+            circleci build -e UNITY_LICENSE_BASE64=UNITY_LICENSE_BASE64 --job unity-ci-build-windows
 
 workflows:
   version: 2
   deploy:
     jobs:
       - test-for-orb
-      # - orb-tools/test-in-builds:
-      #     requires: 
-      #       - orb-tools/pack
-      #     attach-workspace: true
-      #     orb-location: src/orb.yml
-      #     orb-name: unity-ci
-      #     test-steps:
-      #       - orb-tools/local-test-build:
-      #           test-config-location: src/test/unity-ci-test.yml
       - orb-tools/publish:
           requires:
             - test-for-orb

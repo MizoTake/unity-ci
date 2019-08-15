@@ -1,5 +1,16 @@
 version: 2.1
 
+commands:
+  setup:
+    description: "Unity Test Setup"
+    steps:
+      - run:
+          name: craete project
+          command: |
+            /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -createProject .
+            cp -pR ./ci-test/* ./Assets/
+          working_directory: .
+
 executors:
   unity_executor:
     docker:
