@@ -23,7 +23,19 @@ commands:
             apt update && apt install cl-base64 -y
             echo ${<< parameters.license >>} | base64 -di | tr -d '\r' > Unity.ulf
 
-jobs:      
+jobs:
+  unity-ci-build-windows:
+    executor: unity_executor
+    steps:
+      - unity-ci/unity_activate
+      - setup
+      - unity-ci/build:
+          platform: Win
+          method: Build.Execute
+      - unity-ci/zip:
+          directory: ./Build/
+      - store_artifacts:
+          path: ./Build/
   test-for-orb:
     executor: unity_executor
     steps:
