@@ -69,3 +69,9 @@ jobs:
       - setup
       - unity-ci/test:
           mode: playmode
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - build
