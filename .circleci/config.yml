@@ -21,6 +21,7 @@ jobs:
             echo "next pack"
             circleci config pack src > uncompiled-test-config.yml
             echo "next process"
+            cat uncompiled-config.yml
             circleci config process uncompiled-test-config.yml > test-config.yml
             echo "next execute"
             circleci local execute -c test-config.yml -e UNITY_LICENSE_BASE64=UNITY_LICENSE_BASE64 --job "unity-ci-build-webgl"
