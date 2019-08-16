@@ -20,6 +20,7 @@ jobs:
   unity-ci-build-windows:
     executor: unity_executor
     steps:
+      - checkout
       - unity-ci/unity_activate
       - setup
       - unity-ci/build:
@@ -33,6 +34,7 @@ jobs:
     executor: unity_executor
     steps:
       - checkout
+      - unity-ci/unity_activate
       - setup
       - unity-ci/build:
           platform: WebGL
@@ -45,6 +47,7 @@ jobs:
     executor: unity_executor
     steps:
       - checkout
+      - unity-ci/unity_activate
       - setup
       - unity-ci/build:
           platform: OSXUniversal
@@ -57,6 +60,7 @@ jobs:
     executor: unity_executor
     steps:
       - checkout
+      - unity-ci/unity_activate
       - setup
       - unity-ci/test:
           mode: editmode
@@ -64,6 +68,7 @@ jobs:
     executor: unity_executor
     steps:
       - checkout
+      - unity-ci/unity_activate
       - setup
       - unity-ci/test:
           mode: playmode
