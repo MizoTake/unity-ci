@@ -20,25 +20,24 @@ jobs:
   unity-ci-build-windows:
     executor: unity_executor
     steps:
-      - unity_activate
+      - unity-ci/unity_activate
       - setup
-      - build:
+      - unity-ci/build:
           platform: Win
           method: Build.Execute
-      - zip:
+      - unity-ci/zip:
           directory: ./Build/
       - store_artifacts:
           path: ./Build/
   unity-ci-build-webgl:
     executor: unity_executor
     steps:
-      - unity_activate
       - checkout
       - setup
-      - build:
+      - unity-ci/build:
           platform: WebGL
           method: Build.Execute
-      - zip:
+      - unity-ci/zip:
             directory: ./Build/
       - store_artifacts:
           path: ./Build/
@@ -47,10 +46,10 @@ jobs:
     steps:
       - checkout
       - setup
-      - build:
+      - unity-ci/build:
           platform: OSXUniversal
           method: Build.Execute
-      - zip:
+      - unity-ci/zip:
             directory: ./Build/
       - store_artifacts:
           path: ./Build/
@@ -59,12 +58,12 @@ jobs:
     steps:
       - checkout
       - setup
-      - test:
+      - unity-ci/test:
           mode: editmode
   unity-ci-test-playmode:
     executor: unity_executor
     steps:
       - checkout
       - setup
-      - test:
+      - unity-ci/test:
           mode: playmode
