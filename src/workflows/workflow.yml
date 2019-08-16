@@ -1,5 +1,0 @@
-
-workflows:
-  deploy:
-    jobs:
-    - unity-ci-build-webgl
