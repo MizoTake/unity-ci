@@ -1,6 +1,7 @@
 version: 2.1
 
 orbs:
+  cli: circleci/circleci-cli@0.1.4
   orb-tools: circleci/orb-tools@8.27.4
 
 executors:
