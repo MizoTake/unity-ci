@@ -10,7 +10,7 @@ executors:
 
 jobs:
   test-for-orb:
-    executor: unity_executor
+    executor: cli/default
     steps:
       - checkout
       - run:
