@@ -17,8 +17,8 @@ jobs:
       - run:
           name: curl cirlceci local
           command: |
-            apt update && apt install curl -y
-            curl -fLSs https://circle.ci/cli | bash
+            # apt update && apt install curl -y
+            # curl -fLSs https://circle.ci/cli | bash
             circleci config pack src > uncompiled-test-config.yml
             cat uncompiled-test-config.yml
             circleci config process uncompiled-test-config.yml > test-config.yml
