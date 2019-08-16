@@ -17,27 +17,28 @@ executors:
       - image: gableroux/unity3d:2019.1.0f2
 
 jobs:
-  build:
+  unity-ci-build-windows:
     executor: unity_executor
     steps:
-      - unity-ci/unity_activate
+      - unity_activate
       - setup
-      - unity-ci/build:
+      - build:
           platform: Win
           method: Build.Execute
-      - unity-ci/zip:
+      - zip:
           directory: ./Build/
       - store_artifacts:
           path: ./Build/
   unity-ci-build-webgl:
     executor: unity_executor
     steps:
+      - unity_activate
       - checkout
       - setup
-      - unity-ci/build:
+      - build:
           platform: WebGL
           method: Build.Execute
-      - unity-ci/zip:
+      - zip:
             directory: ./Build/
       - store_artifacts:
           path: ./Build/
@@ -46,10 +47,10 @@ jobs:
     steps:
       - checkout
       - setup
-      - unity-ci/build:
+      - build:
           platform: OSXUniversal
           method: Build.Execute
-      - unity-ci/zip:
+      - zip:
             directory: ./Build/
       - store_artifacts:
           path: ./Build/
@@ -58,12 +59,12 @@ jobs:
     steps:
       - checkout
       - setup
-      - unity-ci/test:
+      - test:
           mode: editmode
   unity-ci-test-playmode:
     executor: unity_executor
     steps:
       - checkout
       - setup
-      - unity-ci/test:
+      - test:
           mode: playmode
