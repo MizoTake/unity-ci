@@ -20,7 +20,6 @@ jobs:
   unity-ci-build-windows:
     executor: unity_executor
     steps:
-      - setup_remote_docker
       - checkout
       - unity-ci/unity_activate
       - setup
@@ -34,7 +33,6 @@ jobs:
   unity-ci-build-webgl:
     executor: unity_executor
     steps:
-      - setup_remote_docker
       - checkout
       - unity-ci/unity_activate
       - setup
@@ -48,7 +46,6 @@ jobs:
   unity-ci-build-osxuniversal:
     executor: unity_executor
     steps:
-      - setup_remote_docker
       - checkout
       - unity-ci/unity_activate
       - setup
@@ -62,7 +59,6 @@ jobs:
   unity-ci-test-editmode:
     executor: unity_executor
     steps:
-      - setup_remote_docker
       - checkout
       - unity-ci/unity_activate
       - setup
@@ -71,7 +67,6 @@ jobs:
   unity-ci-test-playmode:
     executor: unity_executor
     steps:
-      - setup_remote_docker
       - checkout
       - unity-ci/unity_activate
       - setup
@@ -79,6 +74,6 @@ jobs:
           mode: playmode
 
 workflows:
-  test:
+  workflow:
     jobs:
       - unity-ci-build-webgl
