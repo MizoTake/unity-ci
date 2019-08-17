@@ -14,8 +14,7 @@ jobs:
     executor: cli/default
     steps:
       - checkout
-      - cli/install
-      - orb-tools/install-bats
+      - setup_remote_docker
       - run:
           name: curl cirlceci local
           command: |
