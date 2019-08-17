@@ -14,15 +14,14 @@ jobs:
     executor: cli/default
     steps:
       - checkout
+      - cli/install
+      - orb-tools/install-bats
       - run:
           name: curl cirlceci local
           command: |
-            # apt update && apt install curl -y
-            # curl -fLSs https://circle.ci/cli | bash
             circleci config pack src > uncompiled-test-config.yml
             cat uncompiled-test-config.yml
             circleci config process uncompiled-test-config.yml > test-config.yml
-            docker start
             circleci local execute -c test-config.yml -e UNITY_LICENSE_BASE64=UNITY_LICENSE_BASE64 --job "unity-ci-build-webgl"
 
 workflows:
