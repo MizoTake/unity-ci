@@ -20,9 +20,9 @@ jobs:
           command: |
             circleci config pack src > uncompiled-test-config.yml
             cat uncompiled-test-config.yml
-            circleci config process uncompiled-test-config.yml > config.yml
-            cat config.yml
-            circleci local execute -c config.yml -e UNITY_LICENSE_BASE64=UNITY_LICENSE_BASE64 --job "unity-ci-build-webgl"
+            circleci config process uncompiled-test-config.yml > test-config.yml
+            cat test-config.yml
+            circleci build --config test-config.yml -e UNITY_LICENSE_BASE64=UNITY_LICENSE_BASE64 --job unity-ci-build-webgl
 
 workflows:
   version: 2
@@ -35,7 +35,7 @@ workflows:
       - orb-tools/publish:
           requires:
             - test-for-orb
-          orb-path: src/orb.yml
+          orb-path: src/orbs/unity-ci.yml
           orb-ref: mizotake/unity-ci@dev:0.0.1
           validate: true
       #     filters:
