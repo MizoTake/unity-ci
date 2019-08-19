@@ -3,13 +3,80 @@ version: 2.1
 orbs:
   cli: circleci/circleci-cli@0.1.4
   orb-tools: circleci/orb-tools@8.27.4
+  unity-ci: mizotake/unity-ci@dev:0.0.1
 
 executors:
   unity_executor:
     docker:
       - image: gableroux/unity3d:2019.1.0f2
 
+commands:
+  setup:
+    description: "Unity Test Setup"
+    steps:
+      - run:
+          name: craete project
+          command: |
+            /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -createProject .
+            cp -pR ./ci-test/* ./Assets/
+          working_directory: .
+
 jobs:
+  unity-ci-build-windows:
+    executor: unity_executor
+    steps:
+      - checkout
+      - unity-ci/unity_activate
+      - setup
+      - unity-ci/build:
+          platform: Win
+          method: Build.Execute
+      - unity-ci/zip:
+          directory: ./Build/
+      - store_artifacts:
+          path: ./Build/
+  unity-ci-build-webgl:
+    executor: unity_executor
+    steps:
+      - checkout
+      - unity-ci/unity_activate
+      - setup
+      - unity-ci/build:
+          platform: WebGL
+          method: Build.Execute
+      - unity-ci/zip:
+            directory: ./Build/
+      - store_artifacts:
+          path: ./Build/
+  unity-ci-build-osxuniversal:
+    executor: unity_executor
+    steps:
+      - checkout
+      - unity-ci/unity_activate
+      - setup
+      - unity-ci/build:
+          platform: OSXUniversal
+          method: Build.Execute
+      - unity-ci/zip:
+            directory: ./Build/
+      - store_artifacts:
+          path: ./Build/
+  unity-ci-test-editmode:
+    executor: unity_executor
+    steps:
+      - checkout
+      - unity-ci/unity_activate
+      - setup
+      - unity-ci/test:
+          mode: editmode
+  unity-ci-test-playmode:
+    executor: unity_executor
+    steps:
+      - checkout
+      - unity-ci/unity_activate
+      - setup
+      - unity-ci/test:
+          mode: playmode
   test-for-orb:
     executor: cli/default
     steps:
@@ -28,15 +95,18 @@ workflows:
   deploy:
     jobs:
       - orb-tools/lint
-      - test-for-orb:
+      - unity-ci-build-webgl:
           requires:
             - orb-tools/lint
-      - orb-tools/publish:
-          requires:
-            - test-for-orb
-          orb-path: src/orbs/unity-ci.yml
-          orb-ref: mizotake/unity-ci@dev:0.0.1
-          validate: true
+      # - test-for-orb:
+      #     requires:
+      #       - orb-tools/lint
+      # - orb-tools/publish:
+      #     requires:
+      #       - test-for-orb
+      #     orb-path: src/orbs/unity-ci.yml
+      #     orb-ref: mizotake/unity-ci@dev:0.0.1
+      #     validate: true
       #     filters:
       #       branches:
       #         ignore: master
