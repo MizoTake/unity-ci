@@ -111,25 +111,25 @@ workflows:
           filters:
             branches:
               ignore: master
-      - orb-tools/increment:
-          orb-path: src/orbs/unity-ci.yml
-          orb-ref: mizotake/unity-ci
-          attach-workspace: true
-          checkout: false
-          requires:
-            - unity-ci-build-windows
-            - unity-ci-build-webgl
-            - unity-ci-build-osxuniversal
-            - unity-ci-test-editmode
-            - unity-ci-test-playmode
-          filters:
-            branches:
-              only: master
-      - orb-tools/publish:
-          orb-path: src/orbs/unity-ci.yml
-          orb-ref: mizotake/unity-ci
-          requires:
-            - orb-tools/increment
-          filters:
-            branches:
-              only: master
+      # - orb-tools/increment:
+      #     orb-path: src/orbs/unity-ci.yml
+      #     orb-ref: mizotake/unity-ci
+      #     attach-workspace: true
+      #     checkout: false
+      #     requires:
+      #       - unity-ci-build-windows
+      #       - unity-ci-build-webgl
+      #       - unity-ci-build-osxuniversal
+      #       - unity-ci-test-editmode
+      #       - unity-ci-test-playmode
+      #     filters:
+      #       branches:
+      #         only: master
+      # - orb-tools/publish:
+      #     orb-path: src/orbs/unity-ci.yml
+      #     orb-ref: mizotake/unity-ci
+      #     requires:
+      #       - orb-tools/increment
+      #     filters:
+      #       branches:
+      #         only: master
