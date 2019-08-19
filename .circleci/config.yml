@@ -80,7 +80,7 @@ jobs:
 
 workflows:
   version: 2
-  deploy:
+  test-and-deploy:
     jobs:
       - orb-tools/lint
       - unity-ci-build-windows:
