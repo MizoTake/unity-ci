@@ -17,7 +17,7 @@ commands:
       - run:
           name: craete project
           command: |
-            /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -createProject .
+            /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -createProject ./
             cp -pR ./ci-test/* ./Assets/
           working_directory: .
 
