@@ -112,7 +112,7 @@ workflows:
             branches:
               ignore: master
       - orb-tools/increment:
-          orb-path: src/orb/unity-ci.yml
+          orb-path: src/orbs/unity-ci.yml
           orb-ref: mizotake/unity-ci
           attach-workspace: true
           checkout: false
@@ -126,7 +126,7 @@ workflows:
             branches:
               only: master
       - orb-tools/publish:
-          orb-path: src/orb/unity-ci.yml
+          orb-path: src/orbs/unity-ci.yml
           orb-ref: mizotake/unity-ci
           requires:
             - orb-tools/increment
