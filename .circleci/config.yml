@@ -77,39 +77,27 @@ jobs:
       - setup
       - unity-ci/test:
           mode: playmode
-  test-for-orb:
-    executor: cli/default
-    steps:
-      - setup_remote_docker
-      - checkout
-      - run:
-          name: curl cirlceci local
-          command: |
-            circleci config pack src > uncompiled-test-config.yml
-            circleci config process uncompiled-test-config.yml > test-config.yml
-            cat test-config.yml
-            circleci local execute --config test-config.yml -e UNITY_LICENSE_BASE64=UNITY_LICENSE_BASE64 --job unity-ci-build-webgl
 
 workflows:
   version: 2
   deploy:
     jobs:
       - orb-tools/lint
+      - unity-ci-build-windows:
+          requires:
+            - orb-tools/lint
       - unity-ci-build-webgl:
           requires:
             - orb-tools/lint
-      # - test-for-orb:
-      #     requires:
-      #       - orb-tools/lint
-      # - orb-tools/publish:
-      #     requires:
-      #       - test-for-orb
-      #     orb-path: src/orbs/unity-ci.yml
-      #     orb-ref: mizotake/unity-ci@dev:0.0.1
-      #     validate: true
-      #     filters:
-      #       branches:
-      #         ignore: master
+      - unity-ci-build-osxuniversal:
+          requires:
+            - orb-tools/lint
+      - unity-ci-test-editmode:
+          requires:
+            - orb-tools/lint
+      - unity-ci-test-playmode:
+          requires:
+            - orb-tools/lint
       # - orb-tools/increment:
       #     orb-path: src/orb.yml
       #     orb-ref: mizotake/unity-ci
