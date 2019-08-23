@@ -4,7 +4,7 @@ orbs:
   cli: circleci/circleci-cli@0.1.4
   orb-tools: circleci/orb-tools@8.27.4
   unity-ci: mizotake/unity-ci@dev:0.0.1
-  slack: circleci/slack@3.2.0
+  slack: circleci/slack@3.3.0
 
 executors:
   unity_executor:
@@ -112,7 +112,7 @@ workflows:
           filters:
             branches:
               ignore: master
-      - slack/approval:
+      - slack/approval-notification:
           requires:
             - unity-ci-build-windows
             - unity-ci-build-webgl
@@ -125,7 +125,7 @@ workflows:
       - approve_deploy:
           type: approval
           requires:
-            - slack/approval
+            - slack/approval-notification
           filters:
             branches:
               only: master
