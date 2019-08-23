@@ -100,6 +100,7 @@ workflows:
           requires:
             - orb-tools/lint
       - orb-tools/publish:
+          name: publish dev orb
           requires:
             - unity-ci-build-windows
             - unity-ci-build-webgl
@@ -140,6 +141,7 @@ workflows:
             branches:
               only: master
       - orb-tools/publish:
+          name: publish orb
           orb-path: src/orbs/unity-ci.yml
           orb-ref: mizotake/unity-ci
           requires:
