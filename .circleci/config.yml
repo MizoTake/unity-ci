@@ -121,6 +121,7 @@ workflows:
             - unity-ci-execute-method
           orb-path: src/orbs/unity-ci.yml
           orb-name: mizotake/unity-ci
+          sha-version-ref: dev:0.0.1
           checkout: true
           publish-alpha-version: false
           filters:
@@ -147,19 +148,12 @@ workflows:
           filters:
             branches:
               only: master
-      - orb-tools/increment:
-          orb-path: src/orbs/unity-ci.yml
-          orb-ref: mizotake/unity-ci
-          requires:
-            - approve_deploy
-          filters:
-            branches:
-              only: master
       - orb-tools/dev-promote-prod:
           name: publish orb
           orb-name: mizotake/unity-ci
+          orb-ref: dev:0.0.1
           requires:
-            - orb-tools/increment
+            - approve_deploy
           filters:
             branches:
               only: master
