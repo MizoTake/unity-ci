@@ -78,6 +78,14 @@ jobs:
       - setup
       - unity-ci/test:
           mode: playmode
+  unity-ci-execute-method:
+    executor: unity_executor
+    steps:
+      - checkout
+      - unity-ci/unity_activate
+      - setup
+      - unity-ci/execute_method:
+          method: Build.Execute
 
 workflows:
   version: 2
@@ -99,6 +107,9 @@ workflows:
       - unity-ci-test-playmode:
           requires:
             - orb-tools/lint
+      - unity-ci-execute-method:
+          requires:
+            - orb-tools/lint
       - orb-tools/publish:
           name: publish dev orb
           requires:
@@ -107,6 +118,7 @@ workflows:
             - unity-ci-build-osxuniversal
             - unity-ci-test-editmode
             - unity-ci-test-playmode
+            - unity-ci-execute-method
           orb-path: src/orbs/unity-ci.yml
           orb-ref: mizotake/unity-ci@dev:0.0.1
           validate: true
@@ -120,9 +132,13 @@ workflows:
             - unity-ci-build-osxuniversal
             - unity-ci-test-editmode
             - unity-ci-test-playmode
+            - unity-ci-execute-method
           message: "本番環境へのデプロイを承認してください"
           mentions: "here"
           color: "#F5E911"
+          filters:
+            branches:
+              only: master
       - approve_deploy:
           type: approval
           requires:
