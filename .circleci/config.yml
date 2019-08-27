@@ -136,6 +136,9 @@ workflows:
           message: "本番環境へのデプロイを承認してください"
           mentions: "here"
           color: "#F5E911"
+          filters:
+            branches:
+              only: master
       - approve_deploy:
           type: approval
           requires:
