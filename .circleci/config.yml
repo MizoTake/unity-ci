@@ -78,6 +78,14 @@ jobs:
       - setup
       - unity-ci/test:
           mode: playmode
+  unity-ci-execute-method:
+    executor: unity_executor
+    steps:
+      - checkout
+      - unity-ci/unity_activate
+      - setup
+      - execute_method:
+          method: Build.Execute
 
 workflows:
   version: 2
