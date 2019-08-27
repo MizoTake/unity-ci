@@ -137,8 +137,6 @@ jobs:
           license: << parameters.license >>
       - test:
           mode: << parameters.mode >>
-      - store_test_results:
-          path: ./test-results
   execute_method:
     parameters:
       exec:
