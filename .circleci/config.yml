@@ -84,7 +84,7 @@ jobs:
       - checkout
       - unity-ci/unity_activate
       - setup
-      - execute_method:
+      - unity-ci/execute_method:
           method: Build.Execute
 
 workflows:
