@@ -146,18 +146,21 @@ workflows:
           filters:
             branches:
               only: master
-      - orb-tools/increment:
-          orb-path: ./src/orbs/unity-ci.yml
-          orb-ref: mizotake/unity-ci
-          checkout: false
+      - checkout:
           requires:
-            - approve_deploy
+            - slack/approval-notification
+          filters:
+            branches:
+              only: master
+      - orb-tools/increment:
+          orb-path: src/orbs/unity-ci.yml
+          orb-ref: mizotake/unity-ci
           filters:
             branches:
               only: master
       - orb-tools/publish:
           name: publish orb
-          orb-path: ./src/orbs/unity-ci.yml
+          orb-path: src/orbs/unity-ci.yml
           orb-ref: mizotake/unity-ci
           requires:
             - orb-tools/increment
