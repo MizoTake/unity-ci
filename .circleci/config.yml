@@ -156,7 +156,7 @@ workflows:
               only: master
       - orb-tools/dev-promote-prod:
           name: publish orb
-          orb-ref: mizotake/unity-ci
+          orb-name: mizotake/unity-ci
           requires:
             - orb-tools/increment
           filters:
