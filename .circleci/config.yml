@@ -121,6 +121,7 @@ workflows:
             - unity-ci-execute-method
           orb-path: src/orbs/unity-ci.yml
           orb-name: mizotake/unity-ci
+          checkout: true
           publish-alpha-version: false
           filters:
             branches:
