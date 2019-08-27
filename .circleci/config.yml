@@ -152,6 +152,7 @@ workflows:
           name: publish orb
           orb-name: mizotake/unity-ci
           orb-ref: dev:0.0.1
+          publish-version-tag: false
           requires:
             - approve_deploy
           filters:
