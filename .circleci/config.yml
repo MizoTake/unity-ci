@@ -107,6 +107,9 @@ workflows:
       - unity-ci-test-playmode:
           requires:
             - orb-tools/lint
+      - unity-ci-execute-method:
+          requires:
+            - orb-tools/lint
       - orb-tools/publish:
           name: publish dev orb
           requires:
@@ -115,6 +118,7 @@ workflows:
             - unity-ci-build-osxuniversal
             - unity-ci-test-editmode
             - unity-ci-test-playmode
+            - unity-ci-execute-method
           orb-path: src/orbs/unity-ci.yml
           orb-ref: mizotake/unity-ci@dev:0.0.1
           validate: true
@@ -128,6 +132,7 @@ workflows:
             - unity-ci-build-osxuniversal
             - unity-ci-test-editmode
             - unity-ci-test-playmode
+            - unity-ci-execute-method
           message: "本番環境へのデプロイを承認してください"
           mentions: "here"
           color: "#F5E911"
