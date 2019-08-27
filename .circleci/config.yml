@@ -110,7 +110,7 @@ workflows:
       - unity-ci-execute-method:
           requires:
             - orb-tools/lint
-      - orb-tools/publish:
+      - orb-tools/publish-dev:
           name: publish dev orb
           requires:
             - unity-ci-build-windows
@@ -120,8 +120,8 @@ workflows:
             - unity-ci-test-playmode
             - unity-ci-execute-method
           orb-path: src/orbs/unity-ci.yml
-          orb-ref: mizotake/unity-ci@dev:0.0.1
-          validate: true
+          orb-ref: mizotake/unity-ci
+          publish-alpha-version: false
           filters:
             branches:
               ignore: master
@@ -154,9 +154,8 @@ workflows:
           filters:
             branches:
               only: master
-      - orb-tools/publish:
+      - orb-tools/dev-promote-prod:
           name: publish orb
-          orb-path: src/orbs/unity-ci.yml
           orb-ref: mizotake/unity-ci
           requires:
             - orb-tools/increment
