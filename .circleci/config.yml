@@ -147,9 +147,8 @@ workflows:
             branches:
               only: master
       - orb-tools/increment:
-          orb-path: src/orbs/unity-ci.yml
+          orb-path: ./src/orbs/unity-ci.yml
           orb-ref: mizotake/unity-ci
-          attach-workspace: true
           checkout: false
           requires:
             - approve_deploy
@@ -158,7 +157,7 @@ workflows:
               only: master
       - orb-tools/publish:
           name: publish orb
-          orb-path: src/orbs/unity-ci.yml
+          orb-path: ./src/orbs/unity-ci.yml
           orb-ref: mizotake/unity-ci
           requires:
             - orb-tools/increment
