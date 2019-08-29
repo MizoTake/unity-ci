@@ -152,7 +152,6 @@ workflows:
           name: publish orb
           orb-name: mizotake/unity-ci
           orb-ref: dev:0.0.1
-          ssh-fingerprints: $FINGER_PRINT
           requires:
             - approve_deploy
           filters:
