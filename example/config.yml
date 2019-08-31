@@ -41,4 +41,4 @@ workflows:
       - unity-ci/execute_method:
           name: Exeucte Method
           exec: unity_executor
-          method: Build.Execute
+          method: Execute.Method
