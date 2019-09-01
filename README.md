@@ -42,7 +42,7 @@ unity-ci orbの公式ページ
 ### unity_activate
 
 |PARAMETER|DESCRIPTION|REQUIRED|DEFAULT|TYPE|
-|---|---|---|---|---|---|
+|---|---|---|---|---|
 |exec|-|:white_check_mark:|-|executor|
 |license|Unity License|-|UNITY_LICENSE_BASE64|env_var_name
 method|Build Execute Method|:white_check_mark:|-|string
