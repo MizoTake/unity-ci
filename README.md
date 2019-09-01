@@ -18,8 +18,8 @@ unity-ci orbの公式ページ
 ### unity_activate
 
 |PARAMETER|DESCRIPTION|REQUIRED|DEFAULT|TYPE|
-|---|---|---|---|---|---|
-|license|Unity License|-|UNITY_LICENSE_BASE64|env_var_name
+|---|---|---|---|---|
+|license|Unity License|-|UNITY_LICENSE_BASE64|env_var_name|
 
 ### build
 
@@ -33,13 +33,11 @@ unity-ci orbの公式ページ
 
 |job name|link|
 |---|---|
-|unity_activate|[unity_activate](#unity_activate)|
 |build|[build](#build)|
 |test|[test](#test)|
 |execute_method|[execute_method](execute_method)|
-|zip|[zip](zip)|
 
-### unity_activate
+### build
 
 |PARAMETER|DESCRIPTION|REQUIRED|DEFAULT|TYPE|
 |---|---|---|---|---|
@@ -51,8 +49,18 @@ zip|Archive Build Contents|-|false|boolean
 no_output_timeout|No Output Timeout|-|10m|string
 directory|Target Directory|-|.|string|
 
-### build
-
 ### test
 
+|PARAMETER|DESCRIPTION|REQUIRED|DEFAULT|TYPE|
+|---|---|---|---|---|
+|exec|-|:white_check_mark:|-|executor|
+|license|Unity License|-|UNITY_LICENSE_BASE64|env_var_name
+|mode|Test Target Mode|:white_check_mark:|-|string|
+
 ### execute_method
+
+|PARAMETER|DESCRIPTION|REQUIRED|DEFAULT|TYPE|
+|---|---|---|---|---|
+|exec|-|:white_check_mark:|-|executor|
+|license|Unity License|-|UNITY_LICENSE_BASE64|env_var_name
+|method|Build Execute Method|:white_check_mark:|-|string|
