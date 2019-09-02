@@ -7,13 +7,6 @@ unity-ci orbの公式ページ
 [mizotake/unity-ci](https://circleci.com/orbs/registry/orb/mizotake/unity-ci)
 
 ## commands
-|command name|link|
-|---|---|
-|unity_activate|[unity_activate](#unity_activate)|
-|build|[build](#build)|
-|test|[test](#test)|
-|execute_method|[execute_method](execute_method)|
-|zip|[zip](zip)|
 
 ### unity_activate
 
@@ -23,19 +16,31 @@ unity-ci orbの公式ページ
 
 ### build
 
+|PARAMETER|DESCRIPTION|REQUIRED|DEFAULT|TYPE|
+|---|---|---|---|---|
+|platform|Build Target Platform|:white_check_mark:|-|string|
+|method|Build Execute Method|:white_check_mark:|-|string|
+|no_output_timeout|No Output Timeout|-|10m|string|
+
 ### test
+
+|PARAMETER|DESCRIPTION|REQUIRED|DEFAULT|TYPE|
+|---|---|---|---|---|
+|mode|Test Target Platform|:white_check_mark:|-|string|
 
 ### execute_method
 
+|PARAMETER|DESCRIPTION|REQUIRED|DEFAULT|TYPE|
+|---|---|---|---|---|
+|method|Target Method|:white_check_mark:|-|string|
+
 ### zip
 
-## jobs
+|PARAMETER|DESCRIPTION|REQUIRED|DEFAULT|TYPE|
+|---|---|---|---|---|
+|directory|Target Directory|:white_check_mark:|-|string
 
-|job name|link|
-|---|---|
-|build|[build](#build)|
-|test|[test](#test)|
-|execute_method|[execute_method](execute_method)|
+## jobs
 
 ### build
 
