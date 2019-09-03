@@ -23,102 +23,32 @@ commands:
           working_directory: .
 
 jobs:
-  unity-ci-build-windows:
-    executor: unity_executor
+  test-for-orb:
+    executor: cli/default
     steps:
+      - setup_remote_docker
       - checkout
-      - unity-ci/unity_activate
-      - setup
-      - unity-ci/build:
-          platform: Win
-          method: Build.Execute
-      - unity-ci/zip:
-          directory: ./Build/
-      - store_artifacts:
-          path: ./Build/
-  unity-ci-build-webgl:
-    executor: unity_executor
-    steps:
-      - checkout
-      - unity-ci/unity_activate
-      - setup
-      - unity-ci/build:
-          platform: WebGL
-          method: Build.Execute
-      - unity-ci/zip:
-            directory: ./Build/
-      - store_artifacts:
-          path: ./Build/
-  unity-ci-build-osxuniversal:
-    executor: unity_executor
-    steps:
-      - checkout
-      - unity-ci/unity_activate
-      - setup
-      - unity-ci/build:
-          platform: OSXUniversal
-          method: Build.Execute
-      - unity-ci/zip:
-            directory: ./Build/
-      - store_artifacts:
-          path: ./Build/
-  unity-ci-test-editmode:
-    executor: unity_executor
-    steps:
-      - checkout
-      - unity-ci/unity_activate
-      - setup
-      - unity-ci/test:
-          mode: editmode
-  unity-ci-test-playmode:
-    executor: unity_executor
-    steps:
-      - checkout
-      - unity-ci/unity_activate
-      - setup
-      - unity-ci/test:
-          mode: playmode
-  unity-ci-execute-method:
-    executor: unity_executor
-    steps:
-      - checkout
-      - unity-ci/unity_activate
-      - setup
-      - unity-ci/execute_method:
-          method: Build.Execute
+      - run:
+          name: curl cirlceci local
+          command: |
+            circleci config pack src > uncompiled-test-config.yml
+            cat uncompiled-test-config.yml
+            circleci config process uncompiled-test-config.yml > test-config.yml
+            mv -f test-config.yml .circleci/config.yml
+            circleci build -e UNITY_LICENSE_BASE64=UNITY_LICENSE_BASE64 --job unity-ci-build-webgl
 
 workflows:
   version: 2
   test-and-deploy:
     jobs:
       - orb-tools/lint
-      - unity-ci-build-windows:
-          requires:
-            - orb-tools/lint
-      - unity-ci-build-webgl:
-          requires:
-            - orb-tools/lint
-      - unity-ci-build-osxuniversal:
-          requires:
-            - orb-tools/lint
-      - unity-ci-test-editmode:
-          requires:
-            - orb-tools/lint
-      - unity-ci-test-playmode:
-          requires:
-            - orb-tools/lint
-      - unity-ci-execute-method:
+      - test-for-orb:
           requires:
             - orb-tools/lint
       - orb-tools/publish-dev:
           name: publish dev orb
           requires:
-            - unity-ci-build-windows
-            - unity-ci-build-webgl
-            - unity-ci-build-osxuniversal
-            - unity-ci-test-editmode
-            - unity-ci-test-playmode
-            - unity-ci-execute-method
+            - test-for-orb
           orb-path: src/orbs/unity-ci.yml
           orb-name: mizotake/unity-ci
           sha-version-ref: dev:0.0.1
@@ -129,12 +59,7 @@ workflows:
               ignore: master
       - slack/approval-notification:
           requires:
-            - unity-ci-build-windows
-            - unity-ci-build-webgl
-            - unity-ci-build-osxuniversal
-            - unity-ci-test-editmode
-            - unity-ci-test-playmode
-            - unity-ci-execute-method
+            - test-for-orb
           message: "本番環境へのデプロイを承認してください"
           mentions: "here"
           color: "#F5E911"
