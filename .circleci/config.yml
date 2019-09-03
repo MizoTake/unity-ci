@@ -32,10 +32,9 @@ jobs:
           name: curl cirlceci local
           command: |
             circleci config pack src > uncompiled-test-config.yml
-            cat uncompiled-test-config.yml
             circleci config process uncompiled-test-config.yml > test-config.yml
             mv -f test-config.yml .circleci/config.yml
-            circleci build -e UNITY_LICENSE_BASE64=UNITY_LICENSE_BASE64 --job unity-ci-build-webgl
+            circleci local execute -e UNITY_LICENSE_BASE64=UNITY_LICENSE_BASE64 --job unity-ci-build-webgl
 
 workflows:
   version: 2
