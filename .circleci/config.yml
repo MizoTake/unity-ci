@@ -19,7 +19,7 @@ commands:
           name: craete project
           command: |
             /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -createProject ./
-            cp -pR ./ci-test-tools/* ./Assets/
+            cp -pR ./ci-tools/ci-test-tools/* ./Assets/
           working_directory: .
 
 jobs:
