@@ -96,6 +96,7 @@ jobs:
       - checkout
       - unity-ci/unity_activate
       - setup
+      - restore-cache
       - unity-ci/test:
           mode: playmode
       - save-cache
