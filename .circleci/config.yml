@@ -21,6 +21,18 @@ commands:
             /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -createProject ./
             cp -pR ./ci-test-tools/* ./Assets/
           working_directory: .
+  save-cache:
+    description: "Unity Test Setup"
+    steps:
+      - save_cache:
+          key: Unity-Library-{{ .Branch }}
+          paths:
+            - Library
+  restore-cache:
+    description: "Unity Test Setup"
+    steps:
+      - restore_cache:
+          key: Unity-Library-{{ .Branch }}
 
 jobs:
   unity-ci-build-windows:
@@ -29,6 +41,7 @@ jobs:
       - checkout
       - unity-ci/unity_activate
       - setup
+      - restore_cache
       - unity-ci/build:
           platform: Win
           method: Build.Execute
@@ -42,6 +55,7 @@ jobs:
       - checkout
       - unity-ci/unity_activate
       - setup
+      - restore_cache
       - unity-ci/build:
           platform: WebGL
           method: Build.Execute
@@ -49,12 +63,14 @@ jobs:
             directory: ./Build/
       - store_artifacts:
           path: ./Build/
+      - save-cache
   unity-ci-build-osxuniversal:
     executor: unity_executor
     steps:
       - checkout
       - unity-ci/unity_activate
       - setup
+      - restore_cache
       - unity-ci/build:
           platform: OSXUniversal
           method: Build.Execute
@@ -62,14 +78,17 @@ jobs:
             directory: ./Build/
       - store_artifacts:
           path: ./Build/
+      - save-cache
   unity-ci-test-editmode:
     executor: unity_executor
     steps:
       - checkout
       - unity-ci/unity_activate
       - setup
+      - restore_cache
       - unity-ci/test:
           mode: editmode
+      - save-cache
   unity-ci-test-playmode:
     executor: unity_executor
     steps:
@@ -78,14 +97,17 @@ jobs:
       - setup
       - unity-ci/test:
           mode: playmode
+      - save-cache
   unity-ci-execute-method:
     executor: unity_executor
     steps:
       - checkout
       - unity-ci/unity_activate
       - setup
+      - restore_cache
       - unity-ci/execute_method:
           method: Build.Execute
+      - save-cache
 
 workflows:
   version: 2
