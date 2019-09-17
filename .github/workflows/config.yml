@@ -1,0 +1,26 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: docker://gableroux/unity3d:2019.1.0f2
+    - name: Unity Activate
+      run: |
+        apt update && apt install cl-base64 -y
+        echo $UNITY_LICENSE_BASE64 | base64 -di | tr -d '\r' > Unity.ulf
+        /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile Unity.ulf || exit 0
+    - name: Create Empty Project
+      run: |
+        /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -createProject ./
+        cp -pR ./ci-test-tools/* ./Assets/
+    - name: Build
+      env:
+        PLATFORM: Win
+        METHOD: Build.Execute
+      run: |
+        /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -executeMethod $METHOD -buildTarget $PLATFORM
