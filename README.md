@@ -2,6 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/MizoTake/unity-ci.svg?style=svg)](https://circleci.com/gh/MizoTake/unity-ci)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+[![Actions Status](https://github.com/MizoTake/unity-ci/workflows/unity-ci-example/badge.svg)](https://github.com/MizoTake/unity-ci/actions)
 
 unity-ci orbの公式ページ
 
