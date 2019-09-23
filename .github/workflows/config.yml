@@ -1,18 +1,18 @@
-name: CI
+name: unity-ci-example
 
 on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    
+    container: docker://gableroux/unity3d:2019.1.0f2
     steps:
-    - uses: docker://gableroux/unity3d:2019.1.0f2
+    - uses: actions/checkout@master
     - name: Unity Activate
+      env:
+        SECRET_PASSPHRASE: ${{ secrets.SECRET_PASSPHRASE }}
       run: |
-        apt update && apt install cl-base64 -y
-        echo $UNITY_LICENSE_BASE64 | base64 -di | tr -d '\r' > Unity.ulf
+        gpg --quiet --batch --yes --decrypt --passphrase="$SECRET_PASSPHRASE" --output ./Unity.ulf ./Unity.ulf.gpg
         /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile Unity.ulf || exit 0
     - name: Create Empty Project
       run: |
