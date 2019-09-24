@@ -10,9 +10,10 @@ jobs:
     - uses: actions/checkout@master
     - name: Unity Activate
       env:
-        SECRET_PASSPHRASE: ${{ secrets.SECRET_PASSPHRASE }}
+        UNITY_LICENSE_BASE64: ${{ secrets.UNITY_LICENSE_BASE64 }}
       run: |
-        gpg --quiet --batch --yes --decrypt --passphrase="$SECRET_PASSPHRASE" --output ./Unity.ulf ./Unity.ulf.gpg
+        apt update && apt install cl-base64 -y
+        echo $UNITY_LICENSE_BASE64 | base64 -di | tr -d '\r' > Unity.ulf
         /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile Unity.ulf || exit 0
     - name: Create Empty Project
       run: |
