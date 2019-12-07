@@ -1,12 +1,12 @@
 version: 2.1
-description: "Unity CI Orb"
+description: 'Unity CI Orb'
 
 commands:
   unity_activate:
-    description: "Unity License Activate"
+    description: 'Unity License Activate'
     parameters:
       license:
-        description: "Unity License"
+        description: 'Unity License'
         type: env_var_name
         default: UNITY_LICENSE_BASE64
     steps:
@@ -17,16 +17,16 @@ commands:
             echo ${<< parameters.license >>} | base64 -di | tr -d '\r' > Unity.ulf
             /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile Unity.ulf || exit 0
   build:
-    description: "Unity Build"
+    description: 'Unity Build'
     parameters:
       platform:
-        description: "Build Target Platform"
+        description: 'Build Target Platform'
         type: string
       method:
-        description: "Build Execute Method"
+        description: 'Build Execute Method'
         type: string
       no_output_timeout:
-        description: "No Output Timeout"
+        description: 'No Output Timeout'
         type: string
         default: 10m
     steps:
@@ -37,23 +37,23 @@ commands:
           working_directory: .
           no_output_timeout: << parameters.no_output_timeout >>
   test:
-    description: "Unity Test"
+    description: 'Unity Test'
     parameters:
       mode:
-        description: "Test Target Platform"
+        description: 'Test Target Platform'
         type: string
     steps:
       - run:
           name: test run
           command: |
             mkdir ./test-results
-            /opt/Unity/Editor/Unity -quit -nographics -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./test-results/results.xml
+            /opt/Unity/Editor/Unity -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./test-results/results.xml
           working_directory: .
   execute_method:
-    description: "Build Execute Method"
+    description: 'Build Execute Method'
     parameters:
       method:
-        description: "Target Method"
+        description: 'Target Method'
         type: string
     steps:
       - run:
@@ -62,10 +62,10 @@ commands:
             /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -executeMethod << parameters.method >> -buildTarget standalone
           working_directory: .
   zip:
-    description: "Build Content Archive"
+    description: 'Build Content Archive'
     parameters:
       directory:
-        description: "Target Directory"
+        description: 'Target Directory'
         type: string
     steps:
       - run:
@@ -82,25 +82,25 @@ jobs:
       exec:
         type: executor
       license:
-        description: "Unity License"
+        description: 'Unity License'
         type: env_var_name
         default: UNITY_LICENSE_BASE64
       method:
-        description: "Build Execute Method"
+        description: 'Build Execute Method'
         type: string
       platform:
-        description: "Test Target Platform"
+        description: 'Test Target Platform'
         type: string
       zip:
-        description: "Archive Build Contents"
+        description: 'Archive Build Contents'
         default: false
         type: boolean
       no_output_timeout:
-        description: "No Output Timeout"
+        description: 'No Output Timeout'
         type: string
         default: 10m
       directory:
-        description: "Target Directory"
+        description: 'Target Directory'
         type: string
         default: .
     executor: << parameters.exec >>
@@ -124,11 +124,11 @@ jobs:
       exec:
         type: executor
       license:
-        description: "Unity License"
+        description: 'Unity License'
         type: env_var_name
         default: UNITY_LICENSE_BASE64
       mode:
-        description: "Test Target Mode"
+        description: 'Test Target Mode'
         type: string
     executor: << parameters.exec >>
     steps:
@@ -142,11 +142,11 @@ jobs:
       exec:
         type: executor
       license:
-        description: "Unity License"
+        description: 'Unity License'
         type: env_var_name
         default: UNITY_LICENSE_BASE64
       method:
-        description: "Build Execute Method"
+        description: 'Build Execute Method'
         type: string
     executor: << parameters.exec >>
     steps:
