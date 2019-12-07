@@ -47,7 +47,7 @@ commands:
           name: test run
           command: |
             mkdir ./test-results
-            /opt/Unity/Editor/Unity -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./test-results/results.xml
+            /opt/Unity/Editor/Unity -nographics -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./test-results/results.xml
           working_directory: .
   execute_method:
     description: 'Build Execute Method'
