@@ -47,6 +47,7 @@ commands:
           name: test run
           command: |
             mkdir ./test-results
+            touch ./test-results/results.xml
             /opt/Unity/Editor/Unity -nographics -silent-crashes -batchmode -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./test-results/results.xml
           working_directory: .
   execute_method:
