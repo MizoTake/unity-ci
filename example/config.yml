@@ -8,6 +8,22 @@ executors:
     docker:
       - image: gableroux/unity3d:2019.1.0f2
 
+jobs:
+  setup:
+    machine: true
+    steps:
+      - restore_cache:
+          key: unity-license-{{ checksum "ProjectSettings/ProjectVersion.txt" }}
+  teardown:
+    machine: true
+    steps:
+      - attach_workspace:
+          at: /activateTools
+      - save_cache:
+          key: unity-license-{{ checksum "ProjectSettings/ProjectVersion.txt" }}
+          paths:
+            - /activateTools/Unity.ulf
+
 workflows:
   version: 2
   unity-ci-test:
@@ -42,3 +58,26 @@ workflows:
           name: Exeucte Method
           exec: unity_executor
           method: Execute.Method
+  unity-ci-activate-ulf-file:
+    jobs:
+      - setup
+      - unity-ci/outputAlf:
+          exec: unity_executor
+          requires:
+            - setup
+      - unity-ci/cloneActivateTool:
+          requires:
+            - unity-ci/outputAlf
+      - unity-ci/outputUlf:
+          requires:
+            - unity-ci/cloneActivateTool
+      - unity-ci/execute_method:
+          requires:
+            - unity-ci/outputUlf
+          name: Exeucte Method
+          exec: unity_executor
+          method: Execute.Method
+      - teardown:
+          requires:
+            - unity-ci-test-playmode
+            - unity-ci-test-editmode
