@@ -79,5 +79,4 @@ workflows:
           method: Execute.Method
       - teardown:
           requires:
-            - unity-ci-test-playmode
-            - unity-ci-test-editmode
+            - unity-ci/execute_method
