@@ -13,7 +13,7 @@ executors:
 
 commands:
   setup:
-    description: "Unity Test Setup"
+    description: 'Unity Test Setup'
     steps:
       - run:
           name: craete project
@@ -46,7 +46,7 @@ jobs:
           platform: WebGL
           method: Build.Execute
       - unity-ci/zip:
-            directory: ./Build/
+          directory: ./Build/
       - store_artifacts:
           path: ./Build/
   unity-ci-build-osxuniversal:
@@ -59,7 +59,7 @@ jobs:
           platform: OSXUniversal
           method: Build.Execute
       - unity-ci/zip:
-            directory: ./Build/
+          directory: ./Build/
       - store_artifacts:
           path: ./Build/
   unity-ci-test-editmode:
@@ -86,6 +86,23 @@ jobs:
       - setup
       - unity-ci/execute_method:
           method: Build.Execute
+  unity-ci-activate-fromFile:
+    executor: unity_executor
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - checkout
+      - attach_workspace:
+          at: /activateTools
+      - unity-ci/unity_activate:
+          licenseFromPath: /activateTools/Unity.ulf
+      - setup
+      - save_cache:
+          key: unity-license
+          paths:
+            - /activateTools/Unity.ulf
+      - unity-ci/execute_method:
+          method: Build.Execute
 
 workflows:
   version: 2
@@ -110,6 +127,19 @@ workflows:
       - unity-ci-execute-method:
           requires:
             - orb-tools/lint
+      - unity-ci/outputAlf:
+          exec: unity_executor
+          requires:
+            - orb-tools/lint
+      - unity-ci/cloneActivateTool:
+          requires:
+            - unity-ci/outputAlf
+      - unity-ci/outputUlf:
+          requires:
+            - unity-ci/cloneActivateTool
+      - unity-ci-activate-fromFile:
+          requires:
+            - unity-ci/outputUlf
       - orb-tools/publish-dev:
           name: publish dev orb
           requires:
@@ -119,6 +149,7 @@ workflows:
             - unity-ci-test-editmode
             - unity-ci-test-playmode
             - unity-ci-execute-method
+            - unity-ci-activate-fromFile
           orb-path: src/orbs/unity-ci.yml
           orb-name: mizotake/unity-ci
           sha-version-ref: dev:0.0.1
@@ -135,13 +166,31 @@ workflows:
             - unity-ci-test-editmode
             - unity-ci-test-playmode
             - unity-ci-execute-method
-          message: "本番環境へのデプロイを承認してください"
-          mentions: "here"
-          color: "#F5E911"
+            - unity-ci-activate-fromFile
+          message: '本番環境へのデプロイを承認してください'
+          mentions: 'here'
+          color: '#F5E911'
           filters:
             branches:
               only: master
       - approve_deploy:
+          name: increment 0.0.1
+          type: approval
+          requires:
+            - slack/approval-notification
+          filters:
+            branches:
+              only: master
+      - approve_deploy:
+          name: increment 0.1.0
+          type: approval
+          requires:
+            - slack/approval-notification
+          filters:
+            branches:
+              only: master
+      - approve_deploy:
+          name: increment 1.0.0
           type: approval
           requires:
             - slack/approval-notification
@@ -149,11 +198,31 @@ workflows:
             branches:
               only: master
       - orb-tools/dev-promote-prod:
-          name: publish orb
+          name: publish orb increment 0.0.1
           orb-name: mizotake/unity-ci
           orb-ref: dev:0.0.1
           requires:
-            - approve_deploy
+            - increment 0.0.1
+          filters:
+            branches:
+              only: master
+      - orb-tools/dev-promote-prod:
+          name: publish orb increment 0.1.0
+          release: minor
+          orb-name: mizotake/unity-ci
+          orb-ref: dev:0.0.1
+          requires:
+            - increment 0.1.0
+          filters:
+            branches:
+              only: master
+      - orb-tools/dev-promote-prod:
+          name: publish orb increment 1.0.0
+          release: major
+          orb-name: mizotake/unity-ci
+          orb-ref: dev:0.0.1
+          requires:
+            - increment 1.0.0
           filters:
             branches:
               only: master
