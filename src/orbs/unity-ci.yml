@@ -118,6 +118,8 @@ jobs:
         default: .
     executor: << parameters.exec >>
     steps:
+      - attach_workspace:
+          at: /activateTools
       - setup_remote_docker:
           docker_layer_caching: true
       - checkout
@@ -152,6 +154,8 @@ jobs:
         type: string
     executor: << parameters.exec >>
     steps:
+      - attach_workspace:
+          at: /activateTools
       - setup_remote_docker:
           docker_layer_caching: true
       - checkout
@@ -177,6 +181,8 @@ jobs:
         type: string
     executor: << parameters.exec >>
     steps:
+      - attach_workspace:
+          at: /activateTools
       - setup_remote_docker:
           docker_layer_caching: true
       - checkout
