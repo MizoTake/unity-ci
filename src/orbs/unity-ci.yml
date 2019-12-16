@@ -12,12 +12,12 @@ commands:
       licenseFromPath:
         description: 'Get from path'
         type: string
-        default: ''
+        default: '/activateTools/Unity.ulf'
     steps:
       - run:
           name: activate
           command: |
-            if [ -s "<< parameters.licenseFromPath >>" ]; then
+            if [ -e "<< parameters.licenseFromPath >>" ]; then
               cat << parameters.licenseFromPath >> | tr -d '\r' > Unity.ulf
             else
               apt update && apt install cl-base64 -y
@@ -42,7 +42,7 @@ commands:
           name: build run
           command: |
             /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -executeMethod << parameters.method >> -buildTarget << parameters.platform >>
-          working_directory: .
+          working_directory: ~/project/
           no_output_timeout: << parameters.no_output_timeout >>
   test:
     description: 'Unity Test'
@@ -57,7 +57,7 @@ commands:
             mkdir ./test-results
             touch ./test-results/results.xml
             xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' /opt/Unity/Editor/Unity -batchmode -nographics -silent-crashes -logFile -projectPath . -runTests -testPlatform << parameters.mode >> -testResults ./test-results/results.xml
-          working_directory: .
+          working_directory: ~/project/
   execute_method:
     description: 'Build Execute Method'
     parameters:
@@ -69,7 +69,7 @@ commands:
           name: execute method
           command: |
             /opt/Unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -executeMethod << parameters.method >> -buildTarget standalone
-          working_directory: .
+          working_directory: ~/project/
   zip:
     description: 'Build Content Archive'
     parameters:
