@@ -120,8 +120,6 @@ jobs:
     steps:
       - attach_workspace:
           at: /activateTools
-      - setup_remote_docker:
-          docker_layer_caching: true
       - checkout
       - unity_activate:
           licenseFromEnv: << parameters.licenseFromEnv >>
@@ -156,8 +154,6 @@ jobs:
     steps:
       - attach_workspace:
           at: /activateTools
-      - setup_remote_docker:
-          docker_layer_caching: true
       - checkout
       - unity_activate:
           licenseFromEnv: << parameters.licenseFromEnv >>
@@ -183,8 +179,6 @@ jobs:
     steps:
       - attach_workspace:
           at: /activateTools
-      - setup_remote_docker:
-          docker_layer_caching: true
       - checkout
       - unity_activate:
           licenseFromEnv: << parameters.licenseFromEnv >>
@@ -197,8 +191,6 @@ jobs:
         type: executor
     executor: << parameters.exec >>
     steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
       - checkout
       - restore_cache:
           key: unity-license
